@@ -1,0 +1,18 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Makao/Makao/Makao.Windows/bin
+/Makao/Makao/Makao.Windows/obj
+/Makao/Makao/Makao.WindowsPhone/bin/Debug
+/Makao/Makao/Makao.WindowsPhone/obj
+/Makao/Makao.Common/bin/Debug
+/Makao/Makao.Common/obj/Debug
+/Makao/Makao.Models/bin/Debug
+/Makao/Makao.Models/obj/Debug
+/Makao/MakaoHub/bin
+/Makao/MakaoHub/obj
+/Makao/MakaoHub/Web.Release.config
+/Makao/MakaoHub/Web.Debug.config
+/Makao/MakaoHub/Web.config
+/Makao/packages
