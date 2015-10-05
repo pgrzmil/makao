@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Microsoft.AspNet.SignalR;
-using Makao.Models;
+using Makao.GameItems;
 
 namespace MakaoHub
 {
@@ -11,7 +11,7 @@ namespace MakaoHub
     {
         private IList<Player> AwaitingPlayers;
 
-        public void RegisterPlayer(Makao.Models.Player player)
+        public void RegisterPlayer(Player player)
         {
             AwaitingPlayers.Add(player);
         }
