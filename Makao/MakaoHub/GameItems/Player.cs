@@ -7,14 +7,13 @@ using System.Threading.Tasks;
 
 namespace Makao.GameItems
 {
-    public class Player
+    public class Player: Models.Player
     {
-        public String Name { get; set; }
         private List<Card> hand;
+        public string ConnectionId { get; set; }
 
-        public Player(string name)
+        public Player(string name): base(name)
         {
-            Name = name;
             hand = new List<Card>();
         }
 

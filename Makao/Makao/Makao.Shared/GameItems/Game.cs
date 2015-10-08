@@ -6,12 +6,12 @@ namespace Makao.Models
 {
     class Game
     {
-        private IList<string> playersNames;
+        private IList<Player> players;
         private Card topCard;
         
         public Game()
         {
-            playersNames = new List<string>();
+            players = new List<Player>();
         }
     }
 
