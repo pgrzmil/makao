@@ -99,8 +99,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <None Include="Properties\PublishProfiles\makao.pubxml" />
     <Content Include="Scripts\jquery-2.1.4.min.map" />
+    <None Include="Properties\PublishProfiles\makao %282%29.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
