@@ -14,7 +14,6 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace Makao
@@ -30,20 +29,10 @@ namespace Makao
         {
             this.InitializeComponent();
         }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            ////  var connection = new HubConnection("http://makao.azurewebsites.net");
-            //var connection = new HubConnection("http://localhost:49642/");
-            //connection.StateChanged += Connection_StateChanged;
-
-            //proxy = connection.CreateHubProxy("GameHub");
-            //proxy.On<string>("AddMessage", message =>
-            //{
-            //    this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => textBlock.Text = message);
-            //});
-
-            //connection.Start();
         }
 
         private void Connection_StateChanged(StateChange state)

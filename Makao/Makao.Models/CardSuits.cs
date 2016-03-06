@@ -4,7 +4,7 @@
     {
         Spades,// (♠), 
         Hearts, ///(♥), 
-        Diamonds,// (♦) and 
+        Diamonds,// (♦) 
         Clubs//(♣)
     }
 }
