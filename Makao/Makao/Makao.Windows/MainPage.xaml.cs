@@ -33,16 +33,17 @@ namespace Makao
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            var connection = new HubConnection("http://makao.azurewebsites.net");
-            connection.StateChanged += Connection_StateChanged;
+            ////  var connection = new HubConnection("http://makao.azurewebsites.net");
+            //var connection = new HubConnection("http://localhost:49642/");
+            //connection.StateChanged += Connection_StateChanged;
 
-            proxy = connection.CreateHubProxy("GameHub");
-            proxy.On<string>("AddMessage", message =>
-            {
-                this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => textBlock.Text = message);
-            });
+            //proxy = connection.CreateHubProxy("GameHub");
+            //proxy.On<string>("AddMessage", message =>
+            //{
+            //    this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => textBlock.Text = message);
+            //});
 
-            connection.Start();
+            //connection.Start();
         }
 
         private void Connection_StateChanged(StateChange state)
@@ -56,7 +57,28 @@ namespace Makao
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            proxy.Invoke("Send", DateTime.Now.ToString());
+            //  var connection = new HubConnection("http://makao.azurewebsites.net");
+            var connection = new HubConnection("http://localhost:49642/");
+            connection.StateChanged += Connection_StateChanged;
+
+            proxy = connection.CreateHubProxy("GameHub");
+            proxy.On<string>("AddMessage", message =>
+            {
+                this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => textBlock.Text = message);
+            });
+            proxy.On<Guid>("SetPlayerId", (x) => SetPlayerId(x));
+            connection.Start();
+        }
+
+        private void SetPlayerId(Guid id)
+        {
+            var a = id;
+        }
+
+        private void registerButton_Click(object sender, RoutedEventArgs e)
+        {
+            proxy.Invoke("ConnectPlayer", "Jaś");
+
         }
     }
 }

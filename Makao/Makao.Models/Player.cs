@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Makao.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,12 +10,12 @@ namespace Makao.Models
     public class Player
     {
         public String Name { get; set; }
-        protected List<Card> hand;
+        public Guid PlayerId { get; set; }
 
         public Player(string name)
         {
             Name = name;
-            hand = new List<Card>();
+            PlayerId = Guid.NewGuid();
         }
     }
 }

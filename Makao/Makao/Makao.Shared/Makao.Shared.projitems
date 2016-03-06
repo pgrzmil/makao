@@ -16,8 +16,6 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Connection\MakaoHub.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)GameItems\Deck.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameItems\Game.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)GameItems\Player.cs" />
   </ItemGroup>
 </Project>
