@@ -24,6 +24,7 @@ namespace Makao
     public sealed partial class MainPage : Page
     {
         IHubProxy proxy;
+        IHubProxy proxy2;
 
         public MainPage()
         {
@@ -41,7 +42,6 @@ namespace Makao
                 this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => button.IsEnabled = true);
             else
                 this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => button.IsEnabled = false);
-
         }
 
         private void button_Click(object sender, RoutedEventArgs e)

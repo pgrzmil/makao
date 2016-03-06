@@ -11,9 +11,6 @@ namespace MakaoHub
 {
     public class GameHub : Hub
     {
-        private static IList<Player> AwaitingPlayers;
-        private static IList<Game> Games;
-
         public GameHub()
         {
 
@@ -21,14 +18,14 @@ namespace MakaoHub
 
         static GameHub()
         {
-            AwaitingPlayers = new List<Player>();
-            Games = new List<Game>();
+            SharedData.AwaitingPlayers = new List<Player>();
+            SharedData.Games = new List<Game>();
         }
 
         public void ConnectPlayer(string name)
         {
             var player = new Player(name) { ConnectionId = Context.ConnectionId };
-            AwaitingPlayers.Add(player);
+            SharedData.AwaitingPlayers.Add(player);
             Clients.Caller.SetPlayerId(player.PlayerId);
 
             TryCreateGame();
@@ -36,9 +33,9 @@ namespace MakaoHub
 
         public void DisconnectPlayer(Guid playerId)
         {
-            var playerToRemove = AwaitingPlayers.First(x => x.PlayerId == playerId);
+            var playerToRemove = SharedData.AwaitingPlayers.First(x => x.PlayerId == playerId);
             if (playerToRemove != null)
-                AwaitingPlayers.Remove(playerToRemove);
+                SharedData.AwaitingPlayers.Remove(playerToRemove);
         }
 
         private void TryCreateGame()
@@ -51,7 +48,7 @@ namespace MakaoHub
 
         }
 
-        public void Send(string message)
+        public void SendMessage(string message)
         {
             Clients.All.AddMessage(message);
         }

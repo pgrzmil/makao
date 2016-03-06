@@ -17,7 +17,7 @@ namespace Makao.GameItems
         }
 
         public virtual void Start()
-    {
+        {
             deck = new Deck();
             stack = new List<Card>();
         }
