@@ -12,6 +12,7 @@ namespace Makao.Models
         public String Name { get; set; }
         public List<Card> Hand { get; private set; }
         public string SessionId { get; set; }
+        public string ConnectionId { get; set; }
 
 
         public Player(string name)

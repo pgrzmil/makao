@@ -17,7 +17,7 @@ namespace Makao.Hub
             var name = PlayerNameCreator.GetRandomName();
             var sessionId = getSessionId(Context.ConnectionId);
 
-            var player = new Player(name) { SessionId = sessionId, Name = name };
+            var player = new Player(name) { SessionId = sessionId, ConnectionId = Context.ConnectionId, Name = name };
             SharedData.Players.Add(player);
 
             Clients.Caller.ConnectResponse(player, true);

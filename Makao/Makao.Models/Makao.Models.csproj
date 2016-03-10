@@ -45,7 +45,7 @@
     <Compile Include="CardRanks.cs" />
     <Compile Include="CardSuits.cs" />
     <Compile Include="Deck.cs" />
-    <Compile Include="Game.cs" />
+    <Compile Include="GameRoom.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
