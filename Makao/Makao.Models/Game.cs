@@ -1,11 +1,10 @@
-﻿using Makao.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Makao.GameItems
+namespace Makao.Models
 {
-    class Game
+    public class Game
     {
         protected Deck deck;
         protected IList<Player> players;

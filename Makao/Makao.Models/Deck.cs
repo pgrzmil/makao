@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-using Makao.Models;
 using Makao.Extensions;
 
-namespace Makao.GameItems
+namespace Makao.Models
 {
     public delegate void EmptyEventHandler();
 
@@ -31,7 +30,7 @@ namespace Makao.GameItems
         }
 
         public Deck(IList<Card> cards)
-    {
+        {
             this.cards = new List<Card>(cards);
             Shuffle();
         }
