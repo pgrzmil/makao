@@ -177,6 +177,16 @@
   <ItemGroup>
     <Folder Include="Models\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Makao.Common\Makao.Common.csproj">
+      <Project>{e8f773b5-78fa-44e8-8a8d-e76c4e1c2b41}</Project>
+      <Name>Makao.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Makao.Models\Makao.Models.csproj">
+      <Project>{d2b38a9f-f189-4c08-9b4b-3ac520147af9}</Project>
+      <Name>Makao.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
