@@ -5,9 +5,9 @@ using System.Web;
 using Microsoft.AspNet.SignalR;
 using Makao.Models;
 
-namespace MakaoHub
+namespace Makao.Hub
 {
-    public class GameHub : Hub
+    public class GameHub : Microsoft.AspNet.SignalR.Hub
     {
         public GameHub()
         {

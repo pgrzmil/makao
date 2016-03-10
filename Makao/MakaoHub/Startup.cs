@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using Microsoft.Owin;
 using Owin;
 
-[assembly: OwinStartup(typeof(MakaoHub.Startup))]
+[assembly: OwinStartup(typeof(Makao.Hub.Startup))]
 
-namespace MakaoHub
+namespace Makao.Hub
 {
     public class Startup
     {

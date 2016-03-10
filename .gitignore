@@ -13,3 +13,11 @@
 /Makao/MakaoHub/bin
 /Makao/MakaoHub/obj
 /Makao/packages
+/Makao/Makao.Common/bin/Release
+/Makao/Makao.Common/obj/Release
+/Makao/Makao.Game/Makao.Game.Windows/bin/Debug
+/Makao/Makao.Game/Makao.Game.Windows/obj/Debug
+/Makao/Makao.Game/Makao.Game.WindowsPhone/bin/Debug
+/Makao/Makao.Game/Makao.Game.WindowsPhone/obj/Debug
+/Makao/Makao.Models/bin/Release
+/Makao/Makao.Models/obj/Release

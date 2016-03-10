@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace MakaoHub
+namespace Makao.Hub
 {
     public static class SharedData
     {

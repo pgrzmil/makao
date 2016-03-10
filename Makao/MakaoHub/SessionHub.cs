@@ -8,9 +8,9 @@ using System.Web;
 using Makao.Extensions;
 using Makao.Models;
 
-namespace MakaoHub
+namespace Makao.Hub
 {
-    public class SessionHub : Hub
+    public class SessionHub : Microsoft.AspNet.SignalR.Hub
     {
         public void Connect()
         {
