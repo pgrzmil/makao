@@ -10,12 +10,24 @@ namespace Makao.Models
     public class Player
     {
         public String Name { get; set; }
-        public Guid PlayerId { get; set; }
+        public List<Card> Hand { get; private set; }
+        public string SessionId { get; set; }
+
 
         public Player(string name)
         {
             Name = name;
-            PlayerId = Guid.NewGuid();
+            Hand = new List<Card>();
         }
+
+        public void AddCard(Card card)
+        {
+            Hand.Add(card);
+        }
+
+        public void AddCards(IEnumerable<Card> cards)
+        {
+            this.Hand.AddRange(cards);
+        }        
     }
 }

@@ -25,7 +25,7 @@ namespace Makao
     {
         IHubProxy proxy;
         IHubProxy proxy2;
-
+        String endpoint = "http://localhost:49642/"; // "http://makao.azurewebsites.net"
         public MainPage()
         {
             this.InitializeComponent();
@@ -46,17 +46,27 @@ namespace Makao
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            //  var connection = new HubConnection("http://makao.azurewebsites.net");
-            var connection = new HubConnection("http://localhost:49642/");
+            var connection = new HubConnection(endpoint);
+            connection.StateChanged += Connection_StateChanged;
+            setProxy(proxy, connection);
+
+            var connection2 = new HubConnection(endpoint);
             connection.StateChanged += Connection_StateChanged;
 
+            setProxy(proxy, connection);
+
+           
+            connection.Start();
+        }
+
+        void setProxy(IHubProxy proxy, HubConnection connection)
+        {
             proxy = connection.CreateHubProxy("GameHub");
             proxy.On<string>("AddMessage", message =>
             {
                 this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => textBlock.Text = message);
             });
             proxy.On<Guid>("SetPlayerId", (x) => SetPlayerId(x));
-            connection.Start();
         }
 
         private void SetPlayerId(Guid id)

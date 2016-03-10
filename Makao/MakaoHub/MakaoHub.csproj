@@ -154,8 +154,10 @@
     <Compile Include="GameHub.cs" />
     <Compile Include="GameItems\Deck.cs" />
     <Compile Include="GameItems\Game.cs" />
-    <Compile Include="GameItems\Player.cs" />
+    <Compile Include="Helpers\StringExtensions.cs" />
+    <Compile Include="PlayerNameCreator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SessionHub.cs" />
     <Compile Include="SharedData.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
