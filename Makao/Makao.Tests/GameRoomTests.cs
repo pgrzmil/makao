@@ -1,19 +1,43 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Makao.Models;
 using Microsoft.AspNet.SignalR.Client;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
 
 namespace Makao.Tests
 {
     [TestClass]
-    public class GameRoomTests
+    public class GameRoomTests : HubTests
     {
-        IHubProxy proxy;
-        String endpoint = "http://localhost:49642/"; // "http://makao.azurewebsites.net"
+        private IList<GameRoom> gameRooms;
+        private Player player;
+
+        [TestInitialize]
+        public override void PrepareForTests()
+        {
+            base.PrepareForTests();
+            ConnectPlayer();
+            gameRooms = null;
+        }
 
         [TestMethod]
-        public void TestMethod1()
+        public void GetGameRoomsTest()
         {
-           
+            InvokeHubMethod<IList<GameRoom>>("GameRoomHub", "GetGameRooms", "GetGameRoomsResponse", (gameRoomsList) =>
+            {
+                gameRooms = gameRoomsList;
+            }, player.SessionId);
+
+            Assert.IsNotNull(gameRooms);
+        }
+
+        private void ConnectPlayer()
+        {
+            InvokeHubMethod<Player, bool>("SessionHub", "Connect", "ConnectResponse", (playr, success) =>
+            {
+                this.player = playr;
+            });
+            ResetConnection();
         }
     }
 }

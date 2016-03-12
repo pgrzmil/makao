@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNet.SignalR;
+﻿using Makao.Extensions;
+using Makao.Models;
+using Microsoft.AspNet.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
-using Makao.Extensions;
-using Makao.Models;
 
 namespace Makao.Hub
 {
@@ -29,7 +29,7 @@ namespace Makao.Hub
             if (playerToRemove != null)
                 SharedData.Players.Remove(playerToRemove);
 
-            Clients.Caller.Disconnected();
+            Clients.Caller.DisconnectResponse(true);
         }
 
         private string getSessionId(string connectionId = "")

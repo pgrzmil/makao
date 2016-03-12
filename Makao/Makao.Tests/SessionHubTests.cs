@@ -1,46 +1,31 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Makao.Models;
 using Microsoft.AspNet.SignalR.Client;
-using System.Diagnostics;
-using Makao.Models;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace Makao.Tests
 {
     [TestClass]
-    public class SessionHubTests
+    public class SessionHubTests : HubTests
     {
-        IHubProxy proxy;
-        string endpoint = "http://localhost:49642/"; // "http://makao.azurewebsites.net"
-        string sessionID;
-        bool requestSent = false;
-        bool stop = false;
+        private Player player;
+
+        [TestInitialize]
+        public override void PrepareForTests()
+        {
+            base.PrepareForTests();
+            player = null;
+        }
 
         [TestMethod]
         public void ConnectionTest()
         {
-            var connection = new HubConnection(endpoint);
-            connection.StateChanged += Connection_StateChanged;
-            proxy = connection.CreateHubProxy("SessionHub");
-            proxy.On<Player, bool>("ConnectResponse", (player, success)=>
+            InvokeHubMethod<Player, bool>("SessionHub", "Connect", "ConnectResponse", (playr, success) =>
             {
-                sessionID = player.SessionId;
-                Assert.IsNull(player);
-                requestSent = false;
+                this.player = playr;
             });
-            connection.Start();
-            while (!stop) ;
-        }
 
-        private void Connection_StateChanged(StateChange state)
-        {
-            if (state.NewState == ConnectionState.Connected)
-            {
-                if (!requestSent)
-                {
-                    proxy.Invoke("Connect");
-                    requestSent = true;
-                }
-            }
+            Assert.IsNotNull(player);
         }
     }
 }
