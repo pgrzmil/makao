@@ -9,10 +9,10 @@ namespace Makao.Models
         protected IList<Card> stack;
         protected Deck deck;
 
-        public IList<Player> Players { get; private set; }
-        public string GameRoomId { get; private set; }
+        public IList<Player> Players { get; set; }
+        public string GameRoomId { get; set; }
         public string Name { get; set; }
-        public int MaxPlayersNumber { get; private set; }
+        public int MaxPlayersNumber { get; set; }
 
         public GameRoom(string id, int playersNumber = 4)
         {
@@ -29,7 +29,7 @@ namespace Makao.Models
 
         public void AddPlayer(Player player)
         {
-            if(Players.Count < MaxPlayersNumber)
+            if (Players.Count < MaxPlayersNumber)
                 Players.Add(player);
         }
 
@@ -37,7 +37,5 @@ namespace Makao.Models
         {
             Players.Remove(player);
         }
-
     }
-
 }

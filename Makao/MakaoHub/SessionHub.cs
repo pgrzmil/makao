@@ -20,7 +20,8 @@ namespace Makao.Hub
             var player = new Player(name) { SessionId = sessionId, ConnectionId = Context.ConnectionId, Name = name };
             SharedData.Players.Add(player);
 
-            Clients.Caller.ConnectResponse(player, true);
+            var status = true;
+            Clients.Caller.ConnectResponse(player, status);
         }
 
         public void Disconnect(string sessionId)
@@ -29,7 +30,8 @@ namespace Makao.Hub
             if (playerToRemove != null)
                 SharedData.Players.Remove(playerToRemove);
 
-            Clients.Caller.DisconnectResponse(true);
+            var status = true;
+            Clients.Caller.DisconnectResponse(status);
         }
 
         private string getSessionId(string connectionId = "")

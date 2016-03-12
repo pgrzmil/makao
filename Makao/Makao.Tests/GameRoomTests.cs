@@ -23,7 +23,7 @@ namespace Makao.Tests
         [TestMethod]
         public void GetGameRoomsTest()
         {
-            InvokeHubMethod<IList<GameRoom>>("GameRoomHub", "GetGameRooms", "GetGameRoomsResponse", (gameRoomsList) =>
+            InvokeHubMethod<IList<GameRoom>, bool>("GameRoomHub", "GetGameRooms", "GetGameRoomsResponse", (gameRoomsList, status) =>
             {
                 gameRooms = gameRoomsList;
             }, player.SessionId);

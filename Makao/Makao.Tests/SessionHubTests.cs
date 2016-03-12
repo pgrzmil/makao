@@ -18,9 +18,9 @@ namespace Makao.Tests
         }
 
         [TestMethod]
-        public void ConnectionTest()
+        public void ConnectPlayerTest()
         {
-            InvokeHubMethod<Player, bool>("SessionHub", "Connect", "ConnectResponse", (playr, success) =>
+            InvokeHubMethod<Player, bool>("SessionHub", "Connect", "ConnectResponse", (playr, status) =>
             {
                 this.player = playr;
             });

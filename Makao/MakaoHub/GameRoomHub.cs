@@ -15,7 +15,8 @@ namespace Makao.Hub
 
         public void GetGameRooms(string sessionId)
         {
-            Clients.Caller.GetGameRoomsResponse(SharedData.GameRooms);
+            var status = true;
+            Clients.Caller.GetGameRoomsResponse(SharedData.GameRooms, status);
         }
 
         public void SetPlayerReady(string sessionId, string gameRoomId)
