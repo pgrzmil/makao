@@ -11,75 +11,40 @@ namespace Makao.Tests
 {
     public class HubTests
     {
-        private string endpoint = "http://localhost:49642/"; // "http://makao.azurewebsites.net"
-        private HubConnection connection;
-        private IHubProxy proxy;
-        private AutoResetEvent waitHandle;
+        protected IList<HubProxyManager> hubProxies;
+        protected AutoResetEvent waitHandle;
+        protected TimeSpan awaitTimeout = TimeSpan.FromSeconds(15);
 
-        protected int RequestAwaitTime { get; set; }
-        protected int ResponseAwaitTime { get; set; }
+        public HubProxyManager DefaultProxy { get { return hubProxies.FirstOrDefault(); } }
 
         public virtual void PrepareForTests()
         {
-            RequestAwaitTime = 5000;
-            ResponseAwaitTime = 10000;
-
-            waitHandle = new AutoResetEvent(false);
-            connection = new HubConnection(endpoint);
+            PrepareForTests(1);
         }
 
-        protected void ResetConnection()
+        public virtual void PrepareForTests(int numberOfElements)
         {
-            connection.Stop();
-            proxy = null;
-        }
-
-        protected void InvokeHubMethod(string hub, string method, params object[] args)
-        {
-            proxy = connection.CreateHubProxy(hub);
-            connection.Start().Wait();
-
-            proxy.Invoke(method, args).Wait(RequestAwaitTime);
-        }
-
-        protected void InvokeHubMethod<T1>(string hub, string method, string responseMethod, Action<T1> responseAction, params object[] args)
-        {
-            proxy = connection.CreateHubProxy(hub);
-            proxy.On<T1>(responseMethod, (arg1) =>
+            hubProxies = new List<HubProxyManager>();
+            for (int i = 0; i < numberOfElements; i++)
             {
-                responseAction(arg1);
-                NotifyResponseArrived();
-            });
-
-            connection.Start().Wait();
-            proxy.Invoke(method, args).Wait(RequestAwaitTime);
-
-            Assert.IsTrue(DidResponseArrived());
+                hubProxies.Add(new HubProxyManager());
+            }
         }
 
-        protected void InvokeHubMethod<T1, T2>(string hub, string method, string responseMethod, Action<T1, T2> responseAction, params object[] args)
+        public virtual void Cleanup()
         {
-            proxy = connection.CreateHubProxy(hub);
-            proxy.On<T1, T2>(responseMethod, (arg1, arg2) =>
-            {
-                responseAction(arg1, arg2);
-                NotifyResponseArrived();
-            });
-
-            connection.Start().Wait();
-            proxy.Invoke(method, args).Wait(RequestAwaitTime);
-
-            Assert.IsTrue(DidResponseArrived());
+            var proxy = new HubProxyManager();
+            proxy.InvokeHubMethod("GameRoomHub", "ResetData");
         }
 
-        private void NotifyResponseArrived()
+        protected void NotifyResponseArrived()
         {
             waitHandle.Set();
         }
 
-        private bool DidResponseArrived()
+        protected bool DidResponseArrived()
         {
-            return waitHandle.WaitOne(ResponseAwaitTime);
+            return waitHandle.WaitOne(awaitTimeout);
         }
     }
 }

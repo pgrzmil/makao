@@ -12,13 +12,15 @@ namespace Makao.Models
         public IList<Player> Players { get; set; }
         public string GameRoomId { get; set; }
         public string Name { get; set; }
-        public int MaxPlayersNumber { get; set; }
+        public int NumberOfPlayers { get; set; }
+        public int MoveTime { get; set; }
 
-        public GameRoom(string id, int playersNumber = 4)
+        public GameRoom(string id)
         {
             Players = new List<Player>();
             GameRoomId = id;
-            MaxPlayersNumber = playersNumber;
+            NumberOfPlayers = 4;
+            MoveTime = 10;
         }
 
         public virtual void Start()
@@ -29,7 +31,7 @@ namespace Makao.Models
 
         public void AddPlayer(Player player)
         {
-            if (Players.Count < MaxPlayersNumber)
+            if (Players.Count < NumberOfPlayers)
                 Players.Add(player);
         }
 
