@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace Makao.Hub
@@ -63,9 +64,9 @@ namespace Makao.Hub
 
         //TODO: Add method to change name
         //TODO: Add method to change number of players
-        //TODO: Add method to change time form move
+        //TODO: Add method to change time for move
 
-        public void SetPlayerReady(string sessionId, string gameRoomId, bool isReady)
+        public bool SetPlayerReady(string sessionId, string gameRoomId, bool isReady)
         {
             var status = false;
             var gameRoom = SharedData.GameRooms.FirstOrDefault(g => g.GameRoomId == gameRoomId);
@@ -77,21 +78,24 @@ namespace Makao.Hub
                 status = true;
 
                 UpdateConnectionId(player);
-                Clients.Caller.SetPlayerReadyResponse(player, status);
-                //TODO: broadcast to all players from room that player changed its game ready status
+                Clients.Group(gameRoom.GameRoomId).SetPlayerReadyResponse(gameRoom);
 
                 TryStartGame(gameRoom);
             }
+            return status;
         }
 
-        private void TryStartGame(GameRoom gameRoom)
+        private Task TryStartGame(GameRoom gameRoom)
         {
-            var isEveryPlayerReady = gameRoom.Players.Count(p => p.IsReady) == gameRoom.NumberOfPlayers;
-
-            if (isEveryPlayerReady)
+            return new Task(() =>
             {
-                //TODO: broadcast to all players from room that game can start
-            }
+                var isEveryPlayerReady = gameRoom.Players.Count(p => p.IsReady) == gameRoom.NumberOfPlayers;
+
+                if (isEveryPlayerReady)
+                {
+                    Clients.Group(gameRoom.GameRoomId).NotifyGameStart();
+                }
+            });
         }
     }
 }

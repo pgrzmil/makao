@@ -14,6 +14,7 @@ namespace Makao.Models
         public string Name { get; set; }
         public int NumberOfPlayers { get; set; }
         public int MoveTime { get; set; }
+        public int CurrentPlayerIndex { get; set; }
 
         public GameRoom(string id)
         {
@@ -21,6 +22,7 @@ namespace Makao.Models
             GameRoomId = id;
             NumberOfPlayers = 4;
             MoveTime = 10;
+            CurrentPlayerIndex = 0;
         }
 
         public virtual void Start()
