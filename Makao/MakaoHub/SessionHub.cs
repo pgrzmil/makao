@@ -10,9 +10,9 @@ using System.Web;
 
 namespace Makao.Hub
 {
-    public class SessionHub : Microsoft.AspNet.SignalR.Hub
+    public class SessionHub : BaseHub
     {
-        public void Connect()
+        public Player Connect()
         {
             var name = PlayerNameCreator.GetRandomName();
             var sessionId = getSessionId(Context.ConnectionId);
@@ -20,18 +20,23 @@ namespace Makao.Hub
             var player = new Player(name) { SessionId = sessionId, ConnectionId = Context.ConnectionId, Name = name };
             SharedData.Players.Add(player);
 
-            var status = true;
-            Clients.Caller.ConnectResponse(player, status);
+            return player;
         }
 
-        public void Disconnect(string sessionId)
+        public bool Disconnect(string sessionId)
         {
+            var status = false;
+
             var playerToRemove = SharedData.Players.First(x => x.SessionId == sessionId);
             if (playerToRemove != null)
+            {
+                var gameRoomHub = new GameRoomHub();
+                gameRoomHub.LeaveGameRoom(sessionId);
                 SharedData.Players.Remove(playerToRemove);
+                status = true;
+            }
 
-            var status = true;
-            Clients.Caller.DisconnectResponse(status);
+            return status;
         }
 
         private string getSessionId(string connectionId = "")

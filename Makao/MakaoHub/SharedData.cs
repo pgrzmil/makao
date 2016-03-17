@@ -13,6 +13,11 @@ namespace Makao.Hub
 
         static SharedData()
         {
+            ResetData();
+        }
+
+        internal static void ResetData()
+        {
             SharedData.Players = new List<Player>();
             SharedData.GameRooms = new List<GameRoom>();
             SharedData.GameRooms.Add(new GameRoom("1") { Name = "Alaska" });

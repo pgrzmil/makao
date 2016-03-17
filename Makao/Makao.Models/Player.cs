@@ -10,15 +10,16 @@ namespace Makao.Models
     public class Player
     {
         public String Name { get; set; }
-        public List<Card> Hand { get; private set; }
+        public List<Card> Hand { get; set; }
         public string SessionId { get; set; }
         public string ConnectionId { get; set; }
-
+        public bool IsReady { get; set; }
 
         public Player(string name)
         {
             Name = name;
             Hand = new List<Card>();
+            IsReady = false;
         }
 
         public void AddCard(Card card)
@@ -29,6 +30,6 @@ namespace Makao.Models
         public void AddCards(IEnumerable<Card> cards)
         {
             this.Hand.AddRange(cards);
-        }        
+        }
     }
 }

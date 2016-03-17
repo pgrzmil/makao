@@ -8,22 +8,17 @@ namespace Makao.Tests
     [TestClass]
     public class SessionHubTests : HubTests
     {
-        private Player player;
-
         [TestInitialize]
         public override void PrepareForTests()
         {
             base.PrepareForTests();
-            player = null;
         }
 
         [TestMethod]
         public void ConnectPlayerTest()
         {
-            InvokeHubMethod<Player, bool>("SessionHub", "Connect", "ConnectResponse", (playr, status) =>
-            {
-                this.player = playr;
-            });
+            Player player = null;
+            player = DefaultProxy.InvokeHubMethod<Player>("SessionHub", "Connect");
 
             Assert.IsNotNull(player);
         }
