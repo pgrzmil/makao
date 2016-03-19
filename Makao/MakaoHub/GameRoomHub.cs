@@ -93,9 +93,29 @@ namespace Makao.Hub
 
                 if (isEveryPlayerReady)
                 {
-                    Clients.Group(gameRoom.GameRoomId).NotifyGameStart();
+                    gameRoom.Start();
+                    Clients.Group(gameRoom.GameRoomId).NotifyGameStart(gameRoom);
                 }
             });
+        }
+
+        public bool PlayCard(string sessionId, string gameRoomId, Card card)
+        {
+            var status = false;
+            var gameRoom = SharedData.GameRooms.FirstOrDefault(g => g.GameRoomId == gameRoomId);
+            gameRoom.GameOver += (winner) =>
+            {
+                Clients.Group(gameRoom.GameRoomId).GameOver(winner);
+            };
+
+            if (gameRoom != null)
+            {
+                status = gameRoom.PlayCard(sessionId, card);
+
+                Clients.Group(gameRoom.GameRoomId).PlayerPlayedCard(gameRoom);
+            }
+
+            return status;
         }
     }
 }

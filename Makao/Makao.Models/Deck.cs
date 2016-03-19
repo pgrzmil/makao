@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Makao.Extensions;
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-using Makao.Extensions;
+using System.Text;
 
 namespace Makao.Models
 {
@@ -38,9 +38,9 @@ namespace Makao.Models
         protected void Shuffle()
         {
             cards.Shuffle();
-        }        
+        }
 
-        internal Card TakeCard()
+        public Card TakeCard()
         {
             var card = cards.FirstOrDefault();
             cards.RemoveAt(0);
@@ -51,7 +51,7 @@ namespace Makao.Models
             return card;
         }
 
-        internal IList<Card> TakeCards(int count)
+        public IList<Card> TakeCards(int count)
         {
             count = cards.Count >= count ? count : cards.Count;
             var cardsToTake = cards.Take(count).ToList();
