@@ -24,12 +24,8 @@ namespace Makao.Models
 
         public GameRoom(string id)
         {
-            Players = new List<Player>();
             GameRoomId = id;
-            NumberOfPlayers = 4;
-            MoveTime = 10;
-            CurrentPlayerIndex = 0;
-            IsRunning = false;
+            Reset();
         }
 
         public void Start()
@@ -38,6 +34,7 @@ namespace Makao.Models
             Deck = new Deck();
             Deck.DeckEmpty += Deck_DeckEmpty;
             stack = new List<Card>();
+
             DealCards();
         }
 
@@ -121,6 +118,17 @@ namespace Makao.Models
             {
                 GameOver(player);
             }
+        }
+
+        public void Reset()
+        {
+            Players = new List<Player>();
+            NumberOfPlayers = 4;
+            MoveTime = 10;
+            CurrentPlayerIndex = 0;
+            IsRunning = false;
+            Deck = null;
+            stack = null;
         }
     }
 }

@@ -6,13 +6,13 @@ using System.Text;
 
 namespace Makao.Models
 {
-    public delegate void EmptyEventHandler();
+    public delegate void DeckEmptyEventHandler();
 
     public class Deck
     {
-        protected IList<Card> cards;
+        protected List<Card> cards;
 
-        public event EmptyEventHandler DeckEmpty;
+        public event DeckEmptyEventHandler DeckEmpty;
 
         public Deck()
         {
@@ -29,7 +29,7 @@ namespace Makao.Models
             Shuffle();
         }
 
-        public Deck(IList<Card> cards)
+        public Deck(List<Card> cards)
         {
             this.cards = new List<Card>(cards);
             Shuffle();
@@ -51,11 +51,11 @@ namespace Makao.Models
             return card;
         }
 
-        public IList<Card> TakeCards(int count)
+        public List<Card> TakeCards(int count)
         {
             count = cards.Count >= count ? count : cards.Count;
             var cardsToTake = cards.Take(count).ToList();
-            cardsToTake.RemoveRange(0, count);
+            cards.RemoveRange(0, count);
 
             if (cards.Count == 0)
                 OnDeckEmpty();

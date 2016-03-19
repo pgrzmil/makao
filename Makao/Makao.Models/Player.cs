@@ -21,15 +21,5 @@ namespace Makao.Models
             Hand = new List<Card>();
             IsReady = false;
         }
-
-        public void AddCard(Card card)
-        {
-            Hand.Add(card);
-        }
-
-        public void AddCards(IEnumerable<Card> cards)
-        {
-            this.Hand.AddRange(cards);
-        }
     }
 }

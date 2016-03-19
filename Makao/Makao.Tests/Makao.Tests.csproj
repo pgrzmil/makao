@@ -61,11 +61,14 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="GameRoomTests.cs" />
-    <Compile Include="HubProxyManager.cs" />
-    <Compile Include="HubTests.cs" />
+    <Compile Include="HubsTests\GameRoomTests.cs" />
+    <Compile Include="HubsTests\HubProxyManager.cs" />
+    <Compile Include="HubsTests\HubTests.cs" />
+    <Compile Include="ModelsTests\DeckMock.cs" />
+    <Compile Include="ModelsTests\DeckTests.cs" />
+    <Compile Include="ModelsTests\GameRoomTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SessionHubTests.cs" />
+    <Compile Include="HubsTests\SessionHubTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -80,6 +83,7 @@
       <Name>Makao.Models</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

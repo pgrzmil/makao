@@ -57,11 +57,6 @@ namespace Makao.Hub
             }
         }
 
-        public void ResetData()
-        {
-            SharedData.ResetData();
-        }
-
         //TODO: Add method to change name
         //TODO: Add method to change number of players
         //TODO: Add method to change time for move
@@ -106,6 +101,7 @@ namespace Makao.Hub
             gameRoom.GameOver += (winner) =>
             {
                 Clients.Group(gameRoom.GameRoomId).GameOver(winner);
+                gameRoom.Reset();
             };
 
             if (gameRoom != null)
