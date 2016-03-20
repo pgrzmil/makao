@@ -10,7 +10,7 @@ using System.Threading;
 namespace Makao.Tests
 {
     [TestClass]
-    public class GameRoomTests : HubTests
+    public class GameRoomHubTests : HubTests
     {
         const int numberOfPlayers = 4;
 

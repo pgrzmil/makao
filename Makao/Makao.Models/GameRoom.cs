@@ -9,18 +9,24 @@ namespace Makao.Models
 
     public class GameRoom
     {
-        protected IList<Card> stack;
+        protected Random rand = new Random();
+        protected List<Card> stack;
+        protected Deck deck;
 
         public event WinnerEventHandler GameOver;
 
-        public Deck Deck { get; set; }
-        public IList<Player> Players { get; set; }
+        public List<Player> Players { get; set; }
         public string GameRoomId { get; set; }
         public string Name { get; set; }
         public int NumberOfPlayers { get; set; }
-        public int MoveTime { get; set; }
+        public int MoveTime { get; set; } //TODO: Implement move time
         public int CurrentPlayerIndex { get; set; }
         public bool IsRunning { get; set; }
+
+        public Player CurrentPlayer
+        {
+            get { return Players[CurrentPlayerIndex]; }
+        }
 
         public GameRoom(string id)
         {
@@ -28,44 +34,50 @@ namespace Makao.Models
             Reset();
         }
 
-        public void Start()
+        public virtual void Start()
         {
-            IsRunning = true;
-            Deck = new Deck();
-            Deck.DeckEmpty += Deck_DeckEmpty;
-            stack = new List<Card>();
+            if (Players.Count > 1)
+            {
+                IsRunning = true;
+                CurrentPlayerIndex = rand.Next(Players.Count);
 
-            DealCards();
+                deck = new Deck();
+                deck.DeckEmpty += Deck_DeckEmpty;
+                stack = new List<Card>();
+
+                DealCards();
+            }
         }
 
-        private void Deck_DeckEmpty()
+        protected void Deck_DeckEmpty()
         {
             var topCard = stack.Last();
-            Deck = new Deck(stack.Take(stack.Count - 1).ToList());
-            Deck.DeckEmpty += Deck_DeckEmpty;
+            deck = new Deck(stack.Take(stack.Count - 1).ToList());
+            deck.DeckEmpty += Deck_DeckEmpty;
 
             stack.Clear();
             stack.Add(topCard);
         }
 
-        private void DealCards()
+        protected void DealCards()
         {
+            var playersInDealingOrder = Players.Rotate(CurrentPlayerIndex);
             for (int i = 0; i < 5; i++)
             {
-                foreach (var player in Players)
+                foreach (var player in playersInDealingOrder)
                 {
-                    player.Hand.Add(Deck.TakeCard());
+                    player.Hand.Add(deck.TakeCard());
                 }
             }
             PlayFirstCard();
         }
 
-        private void PlayFirstCard()
+        protected void PlayFirstCard()
         {
-            stack.Add(Deck.TakeCard());
+            stack.Add(deck.TakeCard());
         }
 
-        public bool PlayCard(string sessionId, Card card)
+        public virtual bool PlayCard(string sessionId, Card card)
         {
             var status = false;
             var player = Players.FirstOrDefault(p => p.SessionId == sessionId);
@@ -85,7 +97,7 @@ namespace Makao.Models
             return status;
         }
 
-        private void CheckIfWinner(Player player)
+        protected void CheckIfWinner(Player player)
         {
             if (player.Hand.Count == 0)
             {
@@ -94,17 +106,22 @@ namespace Makao.Models
             }
         }
 
-        private void UpdateCurrentPlayerIndex()
+        protected void UpdateCurrentPlayerIndex()
         {
             CurrentPlayerIndex++;
             if (CurrentPlayerIndex > Players.Count)
                 CurrentPlayerIndex = 0;
         }
 
-        public void AddPlayer(Player player)
+        public bool AddPlayer(Player player)
         {
+            var status = false;
             if (Players.Count < NumberOfPlayers)
+            {
                 Players.Add(player);
+                status = true;
+            }
+            return status;
         }
 
         public void RemovePlayer(Player player)
@@ -125,9 +142,8 @@ namespace Makao.Models
             Players = new List<Player>();
             NumberOfPlayers = 4;
             MoveTime = 10;
-            CurrentPlayerIndex = 0;
             IsRunning = false;
-            Deck = null;
+            deck = null;
             stack = null;
         }
     }

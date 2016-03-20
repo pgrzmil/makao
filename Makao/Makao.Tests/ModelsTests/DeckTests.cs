@@ -65,9 +65,9 @@ namespace Makao.Tests.ModelsTests
             var actualLeftCardsCount = deck.GetCards().Count;
             var actualNextCard = deck.TakeCard();
 
-            Assert.AreEqual(expectedCard, actualCard);
+            Assert.AreSame(expectedCard, actualCard);
             Assert.AreEqual(expectedLeftCardsCount, actualLeftCardsCount);
-            Assert.AreEqual(expectedNextCard, actualNextCard);
+            Assert.AreSame(expectedNextCard, actualNextCard);
         }
 
         [TestMethod]
@@ -89,10 +89,10 @@ namespace Makao.Tests.ModelsTests
             Assert.AreEqual(expectedTakenCards.Count, actualTakenCards.Count, "Number of cards returned is incorrect");
             for (int i = 0; i < numberOfCardsToTake; i++)
             {
-                Assert.AreEqual(expectedTakenCards[i], actualTakenCards[i], "Cards taken are not from begining of collection");
+                Assert.AreSame(expectedTakenCards[i], actualTakenCards[i], "Cards taken are not from begining of collection");
             }
             Assert.AreEqual(expectedLeftCardsCount, actualLeftCardsCount);
-            Assert.AreEqual(expectedNextCard, actualNextCard);
+            Assert.AreSame(expectedNextCard, actualNextCard);
         }
 
         [TestMethod]
