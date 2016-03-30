@@ -68,6 +68,31 @@ namespace Makao.Tests
             }
         }
 
+        [TestMethod]
+        public void GameRoomHub_LeaveRoom_Test()
+        {
+        }
+
+        [TestMethod]
+        public void GameRoomHub_SetReady_Test()
+        {
+        }
+
+        [TestMethod]
+        public void GameRoomHub_StartGame_Test()
+        {
+        }
+
+        [TestMethod]
+        public void GameRoomHub_PlayCard_Test()
+        {
+        }
+
+        [TestMethod]
+        public void GameRoomHub_PlayGameToEnd_Test()
+        {
+        }
+
         [TestCleanup]
         public override void Cleanup()
         {

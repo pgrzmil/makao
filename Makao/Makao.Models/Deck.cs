@@ -6,13 +6,9 @@ using System.Text;
 
 namespace Makao.Models
 {
-    public delegate void DeckEmptyEventHandler();
-
     public class Deck
     {
         protected List<Card> cards;
-
-        public event DeckEmptyEventHandler DeckEmpty;
 
         public Deck()
         {
@@ -42,33 +38,39 @@ namespace Makao.Models
 
         public Card TakeCard()
         {
+            if (cards.Count == 0)
+                throw new NotEnoughCardsException();
+
             var card = cards.FirstOrDefault();
             cards.RemoveAt(0);
-
-            if (cards.Count == 0)
-                OnDeckEmpty();
 
             return card;
         }
 
         public List<Card> TakeCards(int count)
         {
-            count = cards.Count >= count ? count : cards.Count;
+            if (cards.Count < count)
+                throw new NotEnoughCardsException();
+
             var cardsToTake = cards.Take(count).ToList();
             cards.RemoveRange(0, count);
 
-            if (cards.Count == 0)
-                OnDeckEmpty();
-
             return cardsToTake;
         }
+    }
 
-        protected void OnDeckEmpty()
+    public class NotEnoughCardsException : Exception
+    {
+        public NotEnoughCardsException()
         {
-            if (DeckEmpty != null)
-            {
-                DeckEmpty();
-            }
+        }
+
+        public NotEnoughCardsException(string message) : base(message)
+        {
+        }
+
+        public NotEnoughCardsException(string message, Exception innerException) : base(message, innerException)
+        {
         }
     }
 }

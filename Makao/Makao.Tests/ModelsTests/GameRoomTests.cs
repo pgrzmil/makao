@@ -190,9 +190,9 @@ namespace Makao.Tests.ModelsTests
             var numberOfPlayers = rand.Next(2, gameRoom.NumberOfPlayers);
             AddPlayers(gameRoom, numberOfPlayers);
 
+            gameRoom.Start();
             var expectedCurrentPlayerIndex = gameRoom.CurrentPlayerIndex + 1 == numberOfPlayers ? 0 : gameRoom.CurrentPlayerIndex + 1;
 
-            gameRoom.Start();
             gameRoom.UpdateCurrentPlayerIndexMock();
 
             var actualCurrentPlayerIndex = gameRoom.CurrentPlayerIndex;

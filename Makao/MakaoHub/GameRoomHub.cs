@@ -113,5 +113,18 @@ namespace Makao.Hub
 
             return status;
         }
+
+        public bool TakeCard(string sessionId, string gameRoomId)
+        {
+            var status = false;
+            var gameRoom = SharedData.GameRooms.FirstOrDefault(g => g.GameRoomId == gameRoomId);
+
+            if (gameRoom != null)
+            {
+                status = gameRoom.GiveCardsToPlayer(sessionId);
+                Clients.Group(gameRoom.GameRoomId).PlayerTookCard(gameRoom);
+            }
+            return status;
+        }
     }
 }

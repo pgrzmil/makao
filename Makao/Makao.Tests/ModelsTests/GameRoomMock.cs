@@ -21,7 +21,6 @@ namespace Makao.Tests.ModelsTests
                 CurrentPlayerIndex = rand.Next(Players.Count);
 
                 deck = new DeckMock();
-                deck.DeckEmpty += Deck_DeckEmpty;
                 stack = new List<Card>();
 
                 DealCardsMock();

@@ -100,16 +100,24 @@ namespace Makao.Tests.ModelsTests
         {
             DeckMock deck = null;
             deck = new DeckMock();
-            deck.DeckEmpty += () =>
+
+            var expectedTakenCardsCount = deck.GetCards().Count;
+            var actualTakenCardsCount = deck.TakeCards(expectedTakenCardsCount).Count;
+
+            var wasExceptionThrown = false;
+            try
             {
+                deck.TakeCard();
+            }
+            catch (Models.NotEnoughCardsException)
+            {
+                wasExceptionThrown = true;
                 var expectedLeftCardsCount = 0;
                 var actualLeftCardsCount = deck.GetCards().Count;
                 Assert.AreEqual(expectedLeftCardsCount, actualLeftCardsCount);
-            };
+            }
 
-            var expectedTakenCardsCount = deck.GetCards().Count;
-            var actualTakenCardsCount = deck.TakeCards(deck.GetCards().Count).Count;
-
+            Assert.IsTrue(wasExceptionThrown);
             Assert.AreEqual(expectedTakenCardsCount, actualTakenCardsCount);
         }
     }

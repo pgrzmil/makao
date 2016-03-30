@@ -42,18 +42,16 @@ namespace Makao.Models
                 CurrentPlayerIndex = rand.Next(Players.Count);
 
                 deck = new Deck();
-                deck.DeckEmpty += Deck_DeckEmpty;
                 stack = new List<Card>();
 
                 DealCards();
             }
         }
 
-        protected void Deck_DeckEmpty()
+        protected void RepopulateDeck()
         {
             var topCard = stack.Last();
             deck = new Deck(stack.Take(stack.Count - 1).ToList());
-            deck.DeckEmpty += Deck_DeckEmpty;
 
             stack.Clear();
             stack.Add(topCard);
@@ -109,7 +107,7 @@ namespace Makao.Models
         protected void UpdateCurrentPlayerIndex()
         {
             CurrentPlayerIndex++;
-            if (CurrentPlayerIndex > Players.Count)
+            if (CurrentPlayerIndex >= Players.Count)
                 CurrentPlayerIndex = 0;
         }
 
@@ -127,6 +125,33 @@ namespace Makao.Models
         public void RemovePlayer(Player player)
         {
             Players.Remove(player);
+        }
+
+        public bool GiveCardsToPlayer(string sessionId, int count = 1)
+        {
+            var status = false;
+            var player = Players.FirstOrDefault(p => p.SessionId == sessionId);
+
+            if (player != null)
+            {
+                IEnumerable<Card> cards;
+
+                try
+                {
+                    cards = deck.TakeCards(count);
+                }
+                catch (NotEnoughCardsException)
+                {
+                    RepopulateDeck();
+                    cards = deck.TakeCards(count);
+                }
+
+                player.Hand.AddRange(cards);
+
+                status = true;
+            }
+
+            return status;
         }
 
         protected void OnGameOver(Player player)
