@@ -1,18 +1,14 @@
-﻿using System;
+﻿using Makao.Extensions;
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-using Makao.Extensions;
+using System.Text;
 
 namespace Makao.Models
 {
-    public delegate void EmptyEventHandler();
-
     public class Deck
     {
-        protected IList<Card> cards;
-
-        public event EmptyEventHandler DeckEmpty;
+        protected List<Card> cards;
 
         public Deck()
         {
@@ -29,7 +25,7 @@ namespace Makao.Models
             Shuffle();
         }
 
-        public Deck(IList<Card> cards)
+        public Deck(List<Card> cards)
         {
             this.cards = new List<Card>(cards);
             Shuffle();
@@ -38,37 +34,43 @@ namespace Makao.Models
         protected void Shuffle()
         {
             cards.Shuffle();
-        }        
+        }
 
-        internal Card TakeCard()
+        public Card TakeCard()
         {
+            if (cards.Count == 0)
+                throw new NotEnoughCardsException();
+
             var card = cards.FirstOrDefault();
             cards.RemoveAt(0);
-
-            if (cards.Count == 0)
-                OnDeckEmpty();
 
             return card;
         }
 
-        internal IList<Card> TakeCards(int count)
+        public List<Card> TakeCards(int count)
         {
-            count = cards.Count >= count ? count : cards.Count;
-            var cardsToTake = cards.Take(count).ToList();
-            cardsToTake.RemoveRange(0, count);
+            if (cards.Count < count)
+                throw new NotEnoughCardsException();
 
-            if (cards.Count == 0)
-                OnDeckEmpty();
+            var cardsToTake = cards.Take(count).ToList();
+            cards.RemoveRange(0, count);
 
             return cardsToTake;
         }
+    }
 
-        protected void OnDeckEmpty()
+    public class NotEnoughCardsException : Exception
+    {
+        public NotEnoughCardsException()
         {
-            if (DeckEmpty != null)
-            {
-                DeckEmpty();
-            }
+        }
+
+        public NotEnoughCardsException(string message) : base(message)
+        {
+        }
+
+        public NotEnoughCardsException(string message, Exception innerException) : base(message, innerException)
+        {
         }
     }
 }

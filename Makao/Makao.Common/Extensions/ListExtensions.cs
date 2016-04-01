@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Makao.Extensions
+namespace System.Linq
 {
     public static class ListExtensions
     {
@@ -19,6 +18,11 @@ namespace Makao.Extensions
                 list[k] = list[n];
                 list[n] = value;
             }
+        }
+
+        public static List<T> Rotate<T>(this List<T> list, int offset)
+        {
+            return list.Skip(offset).Concat(list.Take(offset)).ToList();
         }
     }
 }

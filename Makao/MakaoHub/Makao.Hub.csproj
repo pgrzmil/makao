@@ -153,6 +153,7 @@
     <Compile Include="BaseHub.cs" />
     <Compile Include="GameRoomHub.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
+    <Compile Include="MaintenanceHub.cs" />
     <Compile Include="MakaoService.cs" />
     <Compile Include="PlayerNameCreator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

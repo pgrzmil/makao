@@ -57,11 +57,6 @@ namespace Makao.Hub
             }
         }
 
-        public void ResetData()
-        {
-            SharedData.ResetData();
-        }
-
         //TODO: Add method to change name
         //TODO: Add method to change number of players
         //TODO: Add method to change time for move
@@ -93,9 +88,43 @@ namespace Makao.Hub
 
                 if (isEveryPlayerReady)
                 {
-                    Clients.Group(gameRoom.GameRoomId).NotifyGameStart();
+                    gameRoom.Start();
+                    Clients.Group(gameRoom.GameRoomId).NotifyGameStart(gameRoom);
                 }
             });
+        }
+
+        public bool PlayCard(string sessionId, string gameRoomId, Card card)
+        {
+            var status = false;
+            var gameRoom = SharedData.GameRooms.FirstOrDefault(g => g.GameRoomId == gameRoomId);
+            gameRoom.GameOver += (winner) =>
+            {
+                Clients.Group(gameRoom.GameRoomId).GameOver(winner);
+                gameRoom.Reset();
+            };
+
+            if (gameRoom != null)
+            {
+                status = gameRoom.PlayCard(sessionId, card);
+
+                Clients.Group(gameRoom.GameRoomId).PlayerPlayedCard(gameRoom);
+            }
+
+            return status;
+        }
+
+        public bool TakeCard(string sessionId, string gameRoomId)
+        {
+            var status = false;
+            var gameRoom = SharedData.GameRooms.FirstOrDefault(g => g.GameRoomId == gameRoomId);
+
+            if (gameRoom != null)
+            {
+                status = gameRoom.GiveCardsToPlayer(sessionId);
+                Clients.Group(gameRoom.GameRoomId).PlayerTookCard(gameRoom);
+            }
+            return status;
         }
     }
 }
