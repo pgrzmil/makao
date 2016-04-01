@@ -60,7 +60,7 @@
                 <AppBarButton Click="{x:Bind ViewModel.GotoAbout}" Label="About" />
             </controls:PageHeader.SecondaryCommands>
         </controls:PageHeader>
-
+        
         <controls:Resizer x:Name="parameterResizer" Margin="16,16,16,0">
             <!--  place below page header  -->
             <RelativePanel.Below>pageHeader</RelativePanel.Below>

@@ -45,7 +45,7 @@ namespace Makao.Game.UWP.ViewModels
         }
 
         public void GotoDetailsPage() =>
-            NavigationService.Navigate(typeof(Views.DetailPage), Value);
+            NavigationService.Navigate(typeof(Views.GamePage), Value);
 
         public void GotoSettings() =>
             NavigationService.Navigate(typeof(Views.SettingsPage), 0);

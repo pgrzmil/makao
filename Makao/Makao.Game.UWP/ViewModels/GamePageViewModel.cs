@@ -1,3 +1,4 @@
+using Makao.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,18 +11,38 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Makao.Game.UWP.ViewModels
 {
-    public class DetailPageViewModel : ViewModelBase
+    public class GamePageViewModel : ViewModelBase
     {
-        public DetailPageViewModel()
+        public GamePageViewModel()
         {
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
                 Value = "Designtime value";
+
+                GameRoom = new GameRoom("123");
+
+                Player = new Player("Czarny koñ");
+                Player1 = new Player("Ró¿owy rosomak");
+                Player2 = new Player("Niebieski s³oñ");
+                Player3 = new Player("¯ó³ty pawian");
+
+                GameRoom.Players.Add(Player);
+                GameRoom.Players.Add(Player1);
+                GameRoom.Players.Add(Player2);
+                GameRoom.Players.Add(Player3);
             }
         }
 
+        public GameRoom GameRoom { get; set; }
+
         private string _Value = "Default";
         public string Value { get { return _Value; } set { Set(ref _Value, value); } }
+
+        public Player Player1 { get; set; }
+        public Player Player2 { get; set; }
+        public Player Player3 { get; set; }
+        public Player Player { get; set; }
+
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {

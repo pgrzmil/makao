@@ -4,9 +4,9 @@ using Windows.UI.Xaml.Controls;
 
 namespace Makao.Game.UWP.Views
 {
-    public sealed partial class DetailPage : Page
+    public sealed partial class GamePage : Page
     {
-        public DetailPage()
+        public GamePage()
         {
             InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Disabled;

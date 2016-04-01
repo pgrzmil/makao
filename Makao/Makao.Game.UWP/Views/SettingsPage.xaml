@@ -85,20 +85,20 @@
                             <RelativePanel.AlignLeftWithPanel>True</RelativePanel.AlignLeftWithPanel>
                         </ToggleSwitch>
 
-                        <TextBox x:Name="BusyTextTextBox" Width="200"
+                        <!--<TextBox x:Name="BusyTextTextBox" Width="200"
                                  Margin="0,12,0,0" HorizontalAlignment="Left"
                                  Header="Busy text"
                                  Text="{Binding BusyText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                            <!--  place below theme toggle  -->
+                            --><!--  place below theme toggle  --><!--
                             <RelativePanel.Below>UseLightThemeToggleSwitch</RelativePanel.Below>
                             <RelativePanel.AlignLeftWithPanel>True</RelativePanel.AlignLeftWithPanel>
                         </TextBox>
 
                         <Button Margin="12,0,0,0" Command="{x:Bind ViewModel.SettingsPartViewModel.ShowBusyCommand}" Content="Show Busy">
-                            <!--  place next to busy textbox  -->
+                            --><!--  place next to busy textbox  --><!--
                             <RelativePanel.AlignBottomWith>BusyTextTextBox</RelativePanel.AlignBottomWith>
                             <RelativePanel.RightOf>BusyTextTextBox</RelativePanel.RightOf>
-                        </Button>
+                        </Button>-->
                     </RelativePanel>
 
                 </ScrollViewer>
