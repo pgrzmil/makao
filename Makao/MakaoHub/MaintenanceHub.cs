@@ -9,7 +9,7 @@ namespace Makao.Hub
     {
         public void ResetData()
         {
-            SharedData.ResetData();
+            Startup.ResetData();
         }
     }
 }

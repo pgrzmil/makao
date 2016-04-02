@@ -7,7 +7,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Makao.Game.UWP.Views
+namespace Makao.Game.Views
 {
     public sealed partial class Shell : Page
     {
@@ -31,4 +31,3 @@ namespace Makao.Game.UWP.Views
         }
     }
 }
-

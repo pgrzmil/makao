@@ -1,8 +1,8 @@
-using Makao.Game.UWP.ViewModels;
-using Windows.UI.Xaml.Navigation;
+using Makao.Game.ViewModels;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
-namespace Makao.Game.UWP.Views
+namespace Makao.Game.Views
 {
     public sealed partial class GamePage : Page
     {
@@ -13,4 +13,3 @@ namespace Makao.Game.UWP.Views
         }
     }
 }
-

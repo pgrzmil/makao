@@ -26,3 +26,5 @@
 /Makao/Makao.Game.UWP/obj/x86/Debug
 /Makao/Makao.Game.UWP/bin/x86/Debug
 .vs
+/Makao/Makao.Data/obj/Debug
+/Makao/Makao.Hub.Models/obj/Debug

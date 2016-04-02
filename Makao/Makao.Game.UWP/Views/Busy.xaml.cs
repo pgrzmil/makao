@@ -6,7 +6,7 @@ using Template10.Controls;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Makao.Game.UWP.Views
+namespace Makao.Game.Views
 {
     public sealed partial class Busy : UserControl
     {
@@ -20,6 +20,7 @@ namespace Makao.Game.UWP.Views
             get { return (string)GetValue(BusyTextProperty); }
             set { SetValue(BusyTextProperty, value); }
         }
+
         public static readonly DependencyProperty BusyTextProperty =
             DependencyProperty.Register(nameof(BusyText), typeof(string), typeof(Busy), new PropertyMetadata("Please wait..."));
 
@@ -28,6 +29,7 @@ namespace Makao.Game.UWP.Views
             get { return (bool)GetValue(IsBusyProperty); }
             set { SetValue(IsBusyProperty, value); }
         }
+
         public static readonly DependencyProperty IsBusyProperty =
             DependencyProperty.Register(nameof(IsBusy), typeof(bool), typeof(Busy), new PropertyMetadata(false));
 
@@ -46,4 +48,3 @@ namespace Makao.Game.UWP.Views
         }
     }
 }
-

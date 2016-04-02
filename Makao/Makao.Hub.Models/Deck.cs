@@ -1,18 +1,16 @@
 ﻿using Makao.Extensions;
+using Makao.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Makao.Models
+namespace Makao.Hub.Models
 {
-    public class Deck
+    public class Deck : DeckModel
     {
-        protected List<Card> cards;
-
-        public Deck()
+        public Deck() : base()
         {
-            cards = new List<Card>();
             var suits = Enum.GetValues(typeof(CardSuits)).Cast<CardSuits>();
             var ranks = Enum.GetValues(typeof(CardRanks)).Cast<CardRanks>();
             foreach (var suit in suits)
@@ -25,9 +23,8 @@ namespace Makao.Models
             Shuffle();
         }
 
-        public Deck(List<Card> cards)
+        public Deck(List<Card> cards) : base(cards)
         {
-            this.cards = new List<Card>(cards);
             Shuffle();
         }
 

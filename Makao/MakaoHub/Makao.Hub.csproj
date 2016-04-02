@@ -158,13 +158,20 @@
     <Compile Include="PlayerNameCreator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionHub.cs" />
-    <Compile Include="SharedData.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Makao.Common\Makao.Common.csproj">
       <Project>{e8f773b5-78fa-44e8-8a8d-e76c4e1c2b41}</Project>
       <Name>Makao.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Makao.Data\Makao.Data.csproj">
+      <Project>{734691e2-1519-4a09-8b19-3015726d2a19}</Project>
+      <Name>Makao.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Makao.Hub.Models\Makao.Hub.Models.csproj">
+      <Project>{d398aad6-2ec2-487b-8825-395467cab22b}</Project>
+      <Name>Makao.Hub.Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\Makao.Models\Makao.Models.csproj">
       <Project>{d2b38a9f-f189-4c08-9b4b-3ac520147af9}</Project>

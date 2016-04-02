@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Makao.Hub.Models;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 
@@ -109,7 +110,7 @@ namespace Makao.Tests.ModelsTests
             {
                 deck.TakeCard();
             }
-            catch (Models.NotEnoughCardsException)
+            catch (NotEnoughCardsException)
             {
                 wasExceptionThrown = true;
                 var expectedLeftCardsCount = 0;

@@ -1,4 +1,5 @@
-﻿using Makao.Extensions;
+﻿using Makao.Data;
+using Makao.Extensions;
 using Makao.Models;
 using Microsoft.AspNet.SignalR;
 using System;

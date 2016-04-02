@@ -3,11 +3,12 @@ using Template10.Common;
 using Template10.Utils;
 using Windows.UI.Xaml;
 
-namespace Makao.Game.UWP.Services.SettingsServices
+namespace Makao.Game.Services.SettingsServices
 {
     public class SettingsService
     {
         public static SettingsService Instance { get; }
+
         static SettingsService()
         {
             // implement singleton pattern
@@ -15,6 +16,7 @@ namespace Makao.Game.UWP.Services.SettingsServices
         }
 
         Template10.Services.SettingsService.ISettingsHelper _helper;
+
         private SettingsService()
         {
             _helper = new Template10.Services.SettingsService.SettingsHelper();
@@ -62,4 +64,3 @@ namespace Makao.Game.UWP.Services.SettingsServices
         }
     }
 }
-

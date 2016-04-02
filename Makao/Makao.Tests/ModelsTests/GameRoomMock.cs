@@ -1,4 +1,5 @@
-﻿using Makao.Models;
+﻿using Makao.Hub.Models;
+using Makao.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -3,7 +3,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Makao.Game.UWP.Views
+namespace Makao.Game.Views
 {
     public sealed partial class Splash : UserControl
     {
@@ -34,4 +34,3 @@ namespace Makao.Game.UWP.Views
         }
     }
 }
-

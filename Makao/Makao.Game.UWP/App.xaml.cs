@@ -1,11 +1,11 @@
-using Windows.UI.Xaml;
+using Makao.Game.Services.SettingsServices;
 using System.Threading.Tasks;
-using Makao.Game.UWP.Services.SettingsServices;
-using Windows.ApplicationModel.Activation;
-using Template10.Controls;
 using Template10.Common;
+using Template10.Controls;
+using Windows.ApplicationModel.Activation;
+using Windows.UI.Xaml;
 
-namespace Makao.Game.UWP
+namespace Makao.Game
 {
     /// Documentation on APIs used in this page:
     /// https://github.com/Windows-XAML/Template10/wiki
@@ -24,7 +24,7 @@ namespace Makao.Game.UWP
             CacheMaxDuration = _settings.CacheMaxDuration;
             ShowShellBackButton = _settings.UseShellBackButton;
 
-            #endregion
+            #endregion App settings
         }
 
         public override async Task OnInitializeAsync(IActivatedEventArgs args)
@@ -48,9 +48,8 @@ namespace Makao.Game.UWP
         {
             // long-running startup tasks go here
 
-            NavigationService.Navigate(typeof(Views.MainPage));
+            NavigationService.Navigate(typeof(Views.GameRoomPage));
             await Task.CompletedTask;
         }
     }
 }
-

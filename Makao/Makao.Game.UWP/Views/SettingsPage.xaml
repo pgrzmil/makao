@@ -1,20 +1,18 @@
-<Page x:Class="Makao.Game.UWP.Views.SettingsPage"
+<Page x:Class="Makao.Game.Views.SettingsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:Behaviors="using:Template10.Behaviors"
       xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
       xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
-      xmlns:c="using:Makao.Game.UWP.Converters"
       xmlns:controls="using:Template10.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="using:Makao.Game.UWP.Views"
+      xmlns:local="using:Makao.Game.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:vm="using:Makao.Game.UWP.ViewModels" mc:Ignorable="d">
+      xmlns:vm="using:Makao.Game.ViewModels" mc:Ignorable="d">
 
     <Page.DataContext>
-        <vm:SettingsPageViewModel x:Name="ViewModel" />
+        <vm:SettingsViewModel x:Name="ViewModel" />
     </Page.DataContext>
-
 
     <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -89,18 +87,21 @@
                                  Margin="0,12,0,0" HorizontalAlignment="Left"
                                  Header="Busy text"
                                  Text="{Binding BusyText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                            --><!--  place below theme toggle  --><!--
+                            -->
+                        <!--  place below theme toggle  -->
+                        <!--
                             <RelativePanel.Below>UseLightThemeToggleSwitch</RelativePanel.Below>
                             <RelativePanel.AlignLeftWithPanel>True</RelativePanel.AlignLeftWithPanel>
                         </TextBox>
 
                         <Button Margin="12,0,0,0" Command="{x:Bind ViewModel.SettingsPartViewModel.ShowBusyCommand}" Content="Show Busy">
-                            --><!--  place next to busy textbox  --><!--
+                            -->
+                        <!--  place next to busy textbox  -->
+                        <!--
                             <RelativePanel.AlignBottomWith>BusyTextTextBox</RelativePanel.AlignBottomWith>
                             <RelativePanel.RightOf>BusyTextTextBox</RelativePanel.RightOf>
                         </Button>-->
                     </RelativePanel>
-
                 </ScrollViewer>
             </PivotItem>
 
@@ -178,12 +179,8 @@
                         <Run>Version</Run>
                         <Run Text="{Binding Version}" />
                     </TextBlock>
-
                 </RelativePanel>
             </PivotItem>
         </Pivot>
-
     </RelativePanel>
-
 </Page>
-
