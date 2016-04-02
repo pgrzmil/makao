@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Makao.Tests.ModelsTests
 {
-    internal class GameRoomMock : GameRoom
+    internal class GameRoomMock : GameRoomModel
     {
         internal GameRoomMock(string id) : base(id)
         {

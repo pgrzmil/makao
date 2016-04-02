@@ -1,4 +1,8 @@
+using Makao.Game.Models;
+using Makao.Game.Services;
+using Makao.Models;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Template10.Mvvm;
@@ -7,18 +11,18 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Makao.Game.ViewModels
 {
-    public class GameRoomViewModel : ViewModelBase
+    public class GameRoomViewModel : BaseViewModel
     {
+        public DelegateCommand<string> GoToDetails { get; set; }
+
+        public ObservableCollection<GameRoomModel> GameRooms { get { return CacheService.GameRooms; } }
+
         public GameRoomViewModel()
         {
-            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-            {
-                Value = "Designtime value";
-            }
+            GoToDetails = new DelegateCommand<string>((id) => NavigationService.Navigate(typeof(Views.GamePage), id));
         }
 
-        string _Value = "Gas";
-        public string Value { get { return _Value; } set { Set(ref _Value, value); } }
+        public string Value { get; set; }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
@@ -43,13 +47,5 @@ namespace Makao.Game.ViewModels
             args.Cancel = false;
             await Task.CompletedTask;
         }
-
-        public void GotoDetailsPage() => NavigationService.Navigate(typeof(Views.GamePage), Value);
-
-        public void GotoSettings() => NavigationService.Navigate(typeof(Views.SettingsPage), 0);
-
-        public void GotoPrivacy() => NavigationService.Navigate(typeof(Views.SettingsPage), 1);
-
-        public void GotoAbout() => NavigationService.Navigate(typeof(Views.SettingsPage), 2);
     }
 }

@@ -6,16 +6,16 @@ using System.Text;
 
 namespace Makao.Models
 {
-    public class DeckModel
+    public class Deck
     {
         protected List<Card> cards;
 
-        public DeckModel()
+        public Deck()
         {
             cards = new List<Card>();
         }
 
-        public DeckModel(List<Card> cards)
+        public Deck(List<Card> cards)
         {
             this.cards = new List<Card>(cards);
         }

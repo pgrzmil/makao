@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Makao.Tests.ModelsTests
 {
-    internal class DeckMock : Deck
+    internal class DeckMock : DeckModel
     {
         internal DeckMock() : base()
         {

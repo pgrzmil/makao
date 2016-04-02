@@ -59,6 +59,25 @@
             </controls:PageHeader.SecondaryCommands>
         </controls:PageHeader>
 
+        <GridView Margin="10" x:Name="GameRoomsList" SelectionMode="None" ItemsSource="{Binding GameRooms}">
+
+            <RelativePanel.Below>pageHeader</RelativePanel.Below>
+            <RelativePanel.AlignRightWithPanel>True</RelativePanel.AlignRightWithPanel>
+            <RelativePanel.AlignLeftWithPanel>True</RelativePanel.AlignLeftWithPanel>
+            <RelativePanel.AlignBottomWithPanel>True</RelativePanel.AlignBottomWithPanel>
+
+            <GridView.ItemTemplate>
+                <DataTemplate>
+                    <Button Command="{Binding ElementName=GameRoomsList, Path=DataContext.GoToDetails}" CommandParameter="{Binding GameRoomId}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="10" MinHeight="100" MinWidth="150" Background="#CCA9A9A9">
+                        <StackPanel Margin="5">
+                            <TextBlock x:Name="nameTextBlock" Text="{Binding Name}" />
+                            <TextBlock x:Name="numberOfPlayersTextBlock" Text="{Binding NumberOfPlayerText}" />
+                        </StackPanel>
+                    </Button>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+
         <TextBlock x:Name="stateTextBox" Margin="16,16,0,0" Text="Current Visual State">
             <RelativePanel.AlignLeftWithPanel>True</RelativePanel.AlignLeftWithPanel>
             <RelativePanel.AlignBottomWithPanel>True</RelativePanel.AlignBottomWithPanel>

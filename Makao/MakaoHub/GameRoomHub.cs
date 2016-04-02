@@ -17,7 +17,7 @@ namespace Makao.Hub
         {
         }
 
-        public IList<GameRoomModel> GetGameRooms()
+        public IList<GameRoom> GetGameRooms()
         {
             //IDEA: do we need to check sessionId?
             return SharedData.GameRooms;
@@ -26,7 +26,7 @@ namespace Makao.Hub
         public bool EnterGameRoom(string sessionId, string gameRoomId)
         {
             var status = false;
-            var gameRoom = SharedData.GameRooms.Cast<GameRoom>().FirstOrDefault(g => g.GameRoomId == gameRoomId);
+            var gameRoom = SharedData.GameRooms.Cast<GameRoomModel>().FirstOrDefault(g => g.GameRoomId == gameRoomId);
             var player = SharedData.Players.FirstOrDefault(p => p.SessionId == sessionId);
 
             if (gameRoom != null && player != null && gameRoom.Players.Count < gameRoom.NumberOfPlayers)
@@ -46,7 +46,7 @@ namespace Makao.Hub
 
         public void LeaveGameRoom(string sessionId)
         {
-            var gameRooms = SharedData.GameRooms.Cast<GameRoom>().Where(g => g.Players.Count(p => p.SessionId == sessionId) != 0).ToList();
+            var gameRooms = SharedData.GameRooms.Cast<GameRoomModel>().Where(g => g.Players.Count(p => p.SessionId == sessionId) != 0).ToList();
             var player = SharedData.Players.FirstOrDefault(p => p.SessionId == sessionId);
 
             foreach (var gameRoom in gameRooms)
@@ -66,7 +66,7 @@ namespace Makao.Hub
         public bool SetPlayerReady(string sessionId, string gameRoomId, bool isReady)
         {
             var status = false;
-            var gameRoom = SharedData.GameRooms.Cast<GameRoom>().FirstOrDefault(g => g.GameRoomId == gameRoomId);
+            var gameRoom = SharedData.GameRooms.Cast<GameRoomModel>().FirstOrDefault(g => g.GameRoomId == gameRoomId);
             var player = SharedData.Players.FirstOrDefault(p => p.SessionId == sessionId);
 
             if (gameRoom != null && player != null)
@@ -82,7 +82,7 @@ namespace Makao.Hub
             return status;
         }
 
-        private Task TryStartGame(GameRoom gameRoom)
+        private Task TryStartGame(GameRoomModel gameRoom)
         {
             return new Task(() =>
             {
@@ -99,7 +99,7 @@ namespace Makao.Hub
         public bool PlayCard(string sessionId, string gameRoomId, Card card)
         {
             var status = false;
-            var gameRoom = SharedData.GameRooms.Cast<GameRoom>().FirstOrDefault(g => g.GameRoomId == gameRoomId);
+            var gameRoom = SharedData.GameRooms.Cast<GameRoomModel>().FirstOrDefault(g => g.GameRoomId == gameRoomId);
             gameRoom.GameOver += (winner) =>
             {
                 Clients.Group(gameRoom.GameRoomId).GameOver(winner);
@@ -119,7 +119,7 @@ namespace Makao.Hub
         public bool TakeCard(string sessionId, string gameRoomId)
         {
             var status = false;
-            var gameRoom = SharedData.GameRooms.Cast<GameRoom>().FirstOrDefault(g => g.GameRoomId == gameRoomId);
+            var gameRoom = SharedData.GameRooms.Cast<GameRoomModel>().FirstOrDefault(g => g.GameRoomId == gameRoomId);
 
             if (gameRoom != null)
             {

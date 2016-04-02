@@ -5,10 +5,10 @@ using System.Text;
 
 namespace Makao.Models
 {
-    public class GameRoomModel
+    public class GameRoom
     {
         protected List<Card> stack;
-        protected DeckModel deck;
+        protected Deck deck;
 
         public List<Player> Players { get; set; }
         public string GameRoomId { get; set; }
@@ -18,9 +18,11 @@ namespace Makao.Models
         public int CurrentPlayerIndex { get; set; }
         public bool IsRunning { get; set; }
 
-        public GameRoomModel(string id)
+        public GameRoom(string id)
         {
             GameRoomId = id;
+            NumberOfPlayers = 4;
+            MoveTime = 10;
         }
     }
 }

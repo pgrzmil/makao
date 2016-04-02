@@ -41,8 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Deck.cs" />
-    <Compile Include="GameRoom.cs" />
+    <Compile Include="DeckModel.cs" />
+    <Compile Include="GameRoomModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -3,13 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using GameRoomModel = Makao.Models.GameRoomModel;
 
 namespace Makao.Hub.Models
 {
     public delegate void WinnerEventHandler(Player player);
 
-    public class GameRoom : GameRoomModel
+    public class GameRoomModel : GameRoom
     {
         protected Random rand = new Random();
 
@@ -20,7 +19,7 @@ namespace Makao.Hub.Models
             get { return Players[CurrentPlayerIndex]; }
         }
 
-        public GameRoom(string id) : base(id)
+        public GameRoomModel(string id) : base(id)
         {
             Reset();
         }
@@ -32,7 +31,7 @@ namespace Makao.Hub.Models
                 IsRunning = true;
                 CurrentPlayerIndex = rand.Next(Players.Count);
 
-                deck = new Deck();
+                deck = new DeckModel();
                 stack = new List<Card>();
 
                 DealCards();
@@ -42,7 +41,7 @@ namespace Makao.Hub.Models
         protected void RepopulateDeck()
         {
             var topCard = stack.Last();
-            deck = new Deck(stack.Take(stack.Count - 1).ToList());
+            deck = new DeckModel(stack.Take(stack.Count - 1).ToList());
 
             stack.Clear();
             stack.Add(topCard);
@@ -55,7 +54,7 @@ namespace Makao.Hub.Models
             {
                 foreach (var player in playersInDealingOrder)
                 {
-                    player.Hand.Add((deck as Deck).TakeCard());
+                    player.Hand.Add((deck as DeckModel).TakeCard());
                 }
             }
             PlayFirstCard();
@@ -63,7 +62,7 @@ namespace Makao.Hub.Models
 
         protected void PlayFirstCard()
         {
-            stack.Add((deck as Deck).TakeCard());
+            stack.Add((deck as DeckModel).TakeCard());
         }
 
         public virtual bool PlayCard(string sessionId, Card card)
@@ -129,12 +128,12 @@ namespace Makao.Hub.Models
 
                 try
                 {
-                    cards = (deck as Deck).TakeCards(count);
+                    cards = (deck as DeckModel).TakeCards(count);
                 }
                 catch (NotEnoughCardsException)
                 {
                     RepopulateDeck();
-                    cards = (deck as Deck).TakeCards(count);
+                    cards = (deck as DeckModel).TakeCards(count);
                 }
 
                 player.Hand.AddRange(cards);

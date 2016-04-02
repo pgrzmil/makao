@@ -7,9 +7,9 @@ using System.Text;
 
 namespace Makao.Hub.Models
 {
-    public class Deck : DeckModel
+    public class DeckModel : Deck
     {
-        public Deck() : base()
+        public DeckModel() : base()
         {
             var suits = Enum.GetValues(typeof(CardSuits)).Cast<CardSuits>();
             var ranks = Enum.GetValues(typeof(CardRanks)).Cast<CardRanks>();
@@ -23,7 +23,7 @@ namespace Makao.Hub.Models
             Shuffle();
         }
 
-        public Deck(List<Card> cards) : base(cards)
+        public DeckModel(List<Card> cards) : base(cards)
         {
             Shuffle();
         }

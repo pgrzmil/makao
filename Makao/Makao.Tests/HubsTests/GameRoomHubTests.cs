@@ -14,7 +14,7 @@ namespace Makao.Tests
     {
         const int numberOfPlayers = 4;
 
-        private IList<GameRoomModel> gameRooms;
+        private IList<GameRoom> gameRooms;
         private IList<Player> players;
 
         [TestInitialize]
@@ -29,7 +29,7 @@ namespace Makao.Tests
         [TestMethod]
         public void GameRoomHub_GetGameRooms_Test()
         {
-            gameRooms = DefaultProxy.InvokeHubMethod<IList<GameRoomModel>>("GameRoomHub", "GetGameRooms");
+            gameRooms = DefaultProxy.InvokeHubMethod<IList<GameRoom>>("GameRoomHub", "GetGameRooms");
             Assert.IsNotNull(gameRooms);
         }
 
@@ -38,13 +38,13 @@ namespace Makao.Tests
         {
             var gameRoomId = "1";
             var status = false;
-            gameRooms = new List<GameRoomModel> { new GameRoomModel(gameRoomId) };
+            gameRooms = new List<GameRoom> { new GameRoom(gameRoomId) };
 
             for (int i = 0; i < hubProxies.Count; i++)
             {
                 status = hubProxies[i].InvokeHubMethod<bool>("GameRoomHub", "EnterGameRoom", (proxy) =>
                 {
-                    proxy.On<GameRoomModel, Player>("PlayerEnteredRoom", (gameRoom, newPlayer) =>
+                    proxy.On<GameRoom, Player>("PlayerEnteredRoom", (gameRoom, newPlayer) =>
                     {
                         gameRooms[0] = gameRoom;
 

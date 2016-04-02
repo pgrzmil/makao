@@ -6,7 +6,7 @@ using Windows.UI.Xaml;
 
 namespace Makao.Game.ViewModels
 {
-    public class SettingsViewModel : ViewModelBase
+    public class SettingsViewModel : BaseViewModel
     {
         public SettingsPartViewModel SettingsPartViewModel { get; } = new SettingsPartViewModel();
         public AboutPartViewModel AboutPartViewModel { get; } = new AboutPartViewModel();
