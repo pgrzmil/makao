@@ -8,16 +8,16 @@ namespace Makao.Models
 {
     public class Deck
     {
-        protected List<Card> cards;
+        public List<Card> Cards { get; set; }
 
         public Deck()
         {
-            cards = new List<Card>();
+            Cards = new List<Card>();
         }
 
         public Deck(List<Card> cards)
         {
-            this.cards = new List<Card>(cards);
+            this.Cards = new List<Card>(cards);
         }
     }
 }

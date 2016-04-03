@@ -7,12 +7,17 @@
       xmlns:controls="using:Template10.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="using:Makao.Game.Views"
+      xmlns:converters="using:Makao.Game.Converters"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:vm="using:Makao.Game.ViewModels" mc:Ignorable="d">
 
     <Page.DataContext>
         <vm:GameRoomViewModel x:Name="ViewModel" />
     </Page.DataContext>
+
+    <Page.Resources>
+        <converters:NumberOfPlayersConverter x:Key="numberOfPlayersConveter" />
+    </Page.Resources>
 
     <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>
@@ -70,7 +75,7 @@
                     <Button Command="{Binding ElementName=GameRoomsList, Path=DataContext.GoToDetails}" CommandParameter="{Binding GameRoomId}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="10" MinHeight="100" MinWidth="150" Background="#CCA9A9A9">
                         <StackPanel Margin="5">
                             <TextBlock x:Name="nameTextBlock" Text="{Binding Name}" />
-                            <TextBlock x:Name="numberOfPlayersTextBlock" Text="{Binding NumberOfPlayerText}" />
+                            <TextBlock x:Name="numberOfPlayersTextBlock" Text="{Binding Converter={StaticResource numberOfPlayersConveter}}" />
                         </StackPanel>
                     </Button>
                 </DataTemplate>

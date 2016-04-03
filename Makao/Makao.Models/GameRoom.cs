@@ -7,9 +7,8 @@ namespace Makao.Models
 {
     public class GameRoom
     {
-        protected List<Card> stack;
-        protected Deck deck;
-
+        public List<Card> Stack { get; set; }
+        public Deck Deck { get; set; }
         public List<Player> Players { get; set; }
         public string GameRoomId { get; set; }
         public string Name { get; set; }
@@ -18,11 +17,21 @@ namespace Makao.Models
         public int CurrentPlayerIndex { get; set; }
         public bool IsRunning { get; set; }
 
-        public GameRoom(string id)
+        public Card TopCard { get { return Stack == null ? null : Stack.Last(); } }
+
+        public GameRoom()
         {
-            GameRoomId = id;
+            Reset();
+        }
+
+        public void Reset()
+        {
+            Players = new List<Player>();
             NumberOfPlayers = 4;
             MoveTime = 10;
+            IsRunning = false;
+            Deck = null;
+            Stack = null;
         }
     }
 }

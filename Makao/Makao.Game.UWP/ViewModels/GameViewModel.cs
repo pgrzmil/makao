@@ -1,4 +1,3 @@
-using Makao.Game.Models;
 using Makao.Game.Services;
 using Makao.Models;
 using System;
@@ -20,7 +19,7 @@ namespace Makao.Game.ViewModels
             TakeCardCommand = new DelegateCommand(() => { return; });
         }
 
-        public GameRoomModel GameRoom { get; set; }
+        public GameRoom GameRoom { get; set; }
         public DelegateCommand TakeCardCommand { get; set; }
 
         public Player Opponent1 { get { return new Player("Opponent 1"); } }

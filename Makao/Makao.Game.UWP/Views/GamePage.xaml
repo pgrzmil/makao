@@ -14,6 +14,7 @@
     <Page.DataContext>
         <vm:GameViewModel x:Name="ViewModel" />
     </Page.DataContext>
+
     <Page.Resources>
         <converters:CardImageConverter x:Key="cardImageConveter" />
     </Page.Resources>

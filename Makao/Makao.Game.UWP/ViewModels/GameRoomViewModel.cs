@@ -1,4 +1,4 @@
-using Makao.Game.Models;
+using Makao.Common.Extensions;
 using Makao.Game.Services;
 using Makao.Models;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ namespace Makao.Game.ViewModels
     {
         public DelegateCommand<string> GoToDetails { get; set; }
 
-        public ObservableCollection<GameRoomModel> GameRooms { get { return CacheService.GameRooms; } }
+        public ObservableCollection<GameRoom> GameRooms { get { return CacheService.GameRooms; } }
 
         public GameRoomViewModel() : base()
         {
@@ -31,7 +31,17 @@ namespace Makao.Game.ViewModels
             {
                 Value = suspensionState[nameof(Value)]?.ToString();
             }
+
+            FetchGameRooms().Forget();
             await Task.CompletedTask;
+        }
+
+        private async Task FetchGameRooms()
+        {
+            var proxy = new HubProxyService();
+            var gamerooms = await proxy.InvokeHubMethod<IList<GameRoom>>("GameRoomHub", "GetGameRooms");
+            CacheService.GameRooms = new ObservableCollection<GameRoom>(gamerooms);
+            RaisePropertyChanged("GameRooms");
         }
 
         public override async Task OnNavigatedFromAsync(IDictionary<string, object> suspensionState, bool suspending)

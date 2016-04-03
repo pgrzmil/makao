@@ -38,7 +38,7 @@ namespace Makao.Tests
         {
             var gameRoomId = "1";
             var status = false;
-            gameRooms = new List<GameRoom> { new GameRoom(gameRoomId) };
+            gameRooms = new List<GameRoom> { new GameRoom { GameRoomId = gameRoomId, NumberOfPlayers = 4, MoveTime = 10 } };
 
             for (int i = 0; i < hubProxies.Count; i++)
             {

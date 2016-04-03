@@ -1,5 +1,5 @@
 ﻿using Makao.Data;
-using Makao.Hub.Models;
+using Makao.Models;
 using Microsoft.Owin;
 using Owin;
 using System;
@@ -19,16 +19,16 @@ namespace Makao.Hub
 
         internal static void ResetData()
         {
-            SharedData.GameRooms.Add(new GameRoomModel("1") { Name = "Alaska" });
-            SharedData.GameRooms.Add(new GameRoomModel("2") { Name = "Alabama" });
-            SharedData.GameRooms.Add(new GameRoomModel("3") { Name = "Arkansas" });
-            SharedData.GameRooms.Add(new GameRoomModel("4") { Name = "California" });
-            SharedData.GameRooms.Add(new GameRoomModel("5") { Name = "Florida" });
-            SharedData.GameRooms.Add(new GameRoomModel("6") { Name = "Nevada" });
-            SharedData.GameRooms.Add(new GameRoomModel("7") { Name = "Massachusetts" });
-            SharedData.GameRooms.Add(new GameRoomModel("8") { Name = "Texas" });
-            SharedData.GameRooms.Add(new GameRoomModel("9") { Name = "Utah" });
-            SharedData.GameRooms.Add(new GameRoomModel("10") { Name = "Washington" });
+            SharedData.GameRooms.Add(new GameRoom { Name = "Alaska", GameRoomId = "1" });
+            SharedData.GameRooms.Add(new GameRoom { Name = "Alabama", GameRoomId = "2" });
+            SharedData.GameRooms.Add(new GameRoom { Name = "Arkansas", GameRoomId = "3" });
+            SharedData.GameRooms.Add(new GameRoom { Name = "California", GameRoomId = "4" });
+            SharedData.GameRooms.Add(new GameRoom { Name = "Florida", GameRoomId = "5" });
+            SharedData.GameRooms.Add(new GameRoom { Name = "Nevada", GameRoomId = "6" });
+            SharedData.GameRooms.Add(new GameRoom { Name = "Massachusetts", GameRoomId = "7" });
+            SharedData.GameRooms.Add(new GameRoom { Name = "Texas", GameRoomId = "8" });
+            SharedData.GameRooms.Add(new GameRoom { Name = "Utah", GameRoomId = "9" });
+            SharedData.GameRooms.Add(new GameRoom { Name = "Washington", GameRoomId = "10" });
         }
     }
 }
