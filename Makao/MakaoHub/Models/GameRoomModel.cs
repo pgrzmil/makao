@@ -241,8 +241,6 @@ namespace Makao.Hub.Models
             set { gameRoom.Deck = value; }
         }
 
-        public new Card TopCard { get { return Stack == null ? null : Stack.Last(); } }
-
         #endregion Decorator properties
     }
 

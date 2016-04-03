@@ -19,7 +19,7 @@
         <converters:CardImageConverter x:Key="cardImageConveter" />
     </Page.Resources>
 
-    <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <RelativePanel Background="DarkGreen">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="AdaptiveVisualStateGroup">
                 <VisualState x:Name="VisualStateNarrow">
@@ -54,41 +54,80 @@
             <RelativePanel.AlignLeftWithPanel>True</RelativePanel.AlignLeftWithPanel>
         </controls:PageHeader>
 
-        <Grid MaxHeight="250" MaxWidth="500">
-            <RelativePanel.AlignHorizontalCenterWithPanel>True</RelativePanel.AlignHorizontalCenterWithPanel>
-            <RelativePanel.AlignVerticalCenterWithPanel>True</RelativePanel.AlignVerticalCenterWithPanel>
+        <StackPanel Orientation="Horizontal" x:Name="statusGrid">
+            <RelativePanel.Below>pageHeader</RelativePanel.Below>
+            <RelativePanel.AlignRightWithPanel>True</RelativePanel.AlignRightWithPanel>
+            <RelativePanel.AlignLeftWithPanel>True</RelativePanel.AlignLeftWithPanel>
 
-            <StackPanel Orientation="Horizontal">
+            <TextBlock x:Name="statusTextBlock" Margin="5" Text="{Binding StatusText}" />
+            <Button Content="Sit to table" Command="{Binding SitToTableCommand}" />
+            <Button Content="Ready" Command="{Binding SetReadyCommand}" />
+        </StackPanel>
+
+        <Grid>
+            <RelativePanel.Below>opponent2Panel</RelativePanel.Below>
+            <RelativePanel.Above>playerPanel</RelativePanel.Above>
+            <RelativePanel.RightOf>opponent1Panel</RelativePanel.RightOf>
+            <RelativePanel.LeftOf>opponent3Panel</RelativePanel.LeftOf>
+
+            <StackPanel MaxHeight="200" MaxWidth="500" Orientation="Horizontal">
                 <Button x:Name="GetCard" Command="{Binding TakeCardCommand}">
                     <Image Source="ms-appx:///Assets/Cards/cardBackBlue.png" />
                 </Button>
-                <Image Source="{Binding GameRoom.TopCard, Converter={StaticResource cardImageConveter}}" />
+                <Image Margin="25,0,0,0" Source="{Binding TopCard, Converter={StaticResource cardImageConveter}}" />
             </StackPanel>
         </Grid>
 
-        <StackPanel Margin="10,0,0,0">
+        <StackPanel x:Name="opponent1Panel" Margin="10,0,0,0">
             <RelativePanel.AlignLeftWithPanel>True</RelativePanel.AlignLeftWithPanel>
             <RelativePanel.AlignVerticalCenterWithPanel>True</RelativePanel.AlignVerticalCenterWithPanel>
 
             <TextBlock Text="{Binding Opponent1.Name}" Style="{StaticResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" />
         </StackPanel>
-        <StackPanel Margin="0,10,0,0">
-            <RelativePanel.Below>pageHeader</RelativePanel.Below>
+        <StackPanel x:Name="opponent2Panel" Margin="0,10,0,0">
+            <RelativePanel.Below>statusGrid</RelativePanel.Below>
             <RelativePanel.AlignHorizontalCenterWithPanel>True</RelativePanel.AlignHorizontalCenterWithPanel>
 
             <TextBlock Text="{Binding Opponent2.Name}" Style="{StaticResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" />
         </StackPanel>
-        <StackPanel Margin="0,0,10,0">
+        <StackPanel x:Name="opponent3Panel" Margin="0,0,10,0">
             <RelativePanel.AlignRightWithPanel>True</RelativePanel.AlignRightWithPanel>
             <RelativePanel.AlignVerticalCenterWithPanel>True</RelativePanel.AlignVerticalCenterWithPanel>
 
             <TextBlock Text="{Binding Opponent3.Name}" Style="{StaticResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" />
         </StackPanel>
-        <StackPanel Margin="0,0,0,10">
+        <StackPanel x:Name="playerPanel" Margin="0,0,0,10">
             <RelativePanel.AlignBottomWithPanel>True</RelativePanel.AlignBottomWithPanel>
             <RelativePanel.AlignHorizontalCenterWithPanel>True</RelativePanel.AlignHorizontalCenterWithPanel>
+            <RelativePanel.AlignRightWithPanel>True</RelativePanel.AlignRightWithPanel>
+            <RelativePanel.AlignLeftWithPanel>True</RelativePanel.AlignLeftWithPanel>
 
-            <TextBlock Text="{Binding Player.Name}" Style="{StaticResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" />
+            <GridView x:Name="playerHandView"
+                      ItemsSource="{Binding Hand}"
+                      IsItemClickEnabled="True"
+                      IsSwipeEnabled="True"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                      ScrollViewer.HorizontalScrollMode="Enabled"
+                      ScrollViewer.VerticalScrollMode="Disabled">
+                <RelativePanel.Above>playerPanel</RelativePanel.Above>
+                <RelativePanel.AlignRightWithPanel>True</RelativePanel.AlignRightWithPanel>
+                <RelativePanel.AlignLeftWithPanel>True</RelativePanel.AlignLeftWithPanel>
+
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid HorizontalAlignment="Center" Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+
+                <GridView.ItemTemplate>
+                    <DataTemplate>
+                        <Button Command="{Binding ElementName=playerHandView, Path=DataContext.PlayCard}" CommandParameter="{Binding }" MaxHeight="120">
+                            <Image Source="{Binding Converter={StaticResource cardImageConveter}}" />
+                        </Button>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+            <TextBlock x:Name="playerNameTextBlock" Text="{Binding Player.Name}" Style="{StaticResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" />
         </StackPanel>
     </RelativePanel>
 </Page>

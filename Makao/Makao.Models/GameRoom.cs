@@ -17,8 +17,6 @@ namespace Makao.Models
         public int CurrentPlayerIndex { get; set; }
         public bool IsRunning { get; set; }
 
-        public Card TopCard { get { return Stack == null ? null : Stack.Last(); } }
-
         public GameRoom()
         {
             Reset();

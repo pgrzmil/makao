@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Makao.Game.Services;
+using Makao.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +18,20 @@ namespace Makao.Game.ViewModels
         public void GotoPrivacy() => NavigationService.Navigate(typeof(Views.SettingsPage), 1);
 
         public void GotoAbout() => NavigationService.Navigate(typeof(Views.SettingsPage), 2);
+
+        public Player Player { get { return CacheService.Player; } }
+
+        private string statusText;
+
+        public string StatusText
+        {
+            get { return statusText; }
+            set
+            {
+                statusText = value;
+                RaisePropertyChanged("StatusText");
+            }
+        }
 
         public BaseViewModel()
         {

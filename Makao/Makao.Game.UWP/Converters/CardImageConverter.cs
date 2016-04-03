@@ -19,8 +19,8 @@ namespace Makao.Game.Converters
             }
 
             var card = value as Card;
-            var imagePath = string.Format("ms-appx:///Assets/Card/{0}{1}.png", card.Rank.ToString(), card.Suit.ToString());
-            var image = new BitmapImage(new Uri(imagePath));
+            var imagePath = string.Format("ms-appx:///Assets/Cards/{0}{1}.png", card.Rank.ToString(), card.Suit.ToString());
+            var image = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
             return image;
         }
 

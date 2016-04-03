@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.SignalR.Client;
+﻿using Makao.Common.Extensions;
+using Microsoft.AspNet.SignalR.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,13 @@ namespace Makao.Game.Services
         private HubConnection connection;
         private IHubProxy proxy;
 
-        protected TimeSpan awaitTimeout = TimeSpan.FromSeconds(10);
-
-        public HubProxyService()
+        public HubProxyService(string hub, Action<IHubProxy> subscribeCallBacks = null)
         {
             ResetConnection();
+
+            proxy = connection.CreateHubProxy(hub);
+            subscribeCallBacks?.Invoke(proxy);
+            connection.Start().Wait();
         }
 
         public void ResetConnection()
@@ -27,33 +30,8 @@ namespace Makao.Game.Services
             connection = new HubConnection(endpoint);
         }
 
-        public void InvokeHubMethod(string hub, string method, params object[] args)
+        public async Task<T> InvokeHubMethod<T>(string method, params object[] args)
         {
-            InvokeHubMethod(hub, method, null, args);
-        }
-
-        public void InvokeHubMethod(string hub, string method, Action<IHubProxy> subscribeCallBacks, params object[] args)
-        {
-            proxy = connection.CreateHubProxy(hub);
-            subscribeCallBacks?.Invoke(proxy);
-
-            connection.Start().Wait();
-
-            proxy.Invoke(method, args).Wait(awaitTimeout);
-        }
-
-        public Task<T> InvokeHubMethod<T>(string hub, string method, params object[] args)
-        {
-            return InvokeHubMethod<T>(hub, method, null, args);
-        }
-
-        public async Task<T> InvokeHubMethod<T>(string hub, string method, Action<IHubProxy> subscribeCallBacks, params object[] args)
-        {
-            proxy = connection.CreateHubProxy(hub);
-            if (subscribeCallBacks != null)
-                subscribeCallBacks(proxy);
-
-            await connection.Start();
             return await proxy.Invoke<T>(method, args);
         }
     }

@@ -11,7 +11,7 @@ namespace Makao.Game.Services
     internal static class CacheService
     {
         internal static ObservableCollection<GameRoom> GameRooms { get; set; }
-        internal static string SessionId { get; set; }
+        internal static Player Player { get; set; }
 
         static CacheService()
         {

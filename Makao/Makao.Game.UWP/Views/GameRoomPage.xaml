@@ -63,9 +63,16 @@
                 <AppBarButton Click="{x:Bind ViewModel.GotoAbout}" Label="About" />
             </controls:PageHeader.SecondaryCommands>
         </controls:PageHeader>
-
-        <GridView Margin="10" x:Name="GameRoomsList" SelectionMode="None" ItemsSource="{Binding GameRooms}">
+        <StackPanel Orientation="Horizontal" x:Name="statusGrid">
             <RelativePanel.Below>pageHeader</RelativePanel.Below>
+            <RelativePanel.AlignRightWithPanel>True</RelativePanel.AlignRightWithPanel>
+            <RelativePanel.AlignLeftWithPanel>True</RelativePanel.AlignLeftWithPanel>
+
+            <TextBlock x:Name="playerNameTextBlock" Margin="5" Text="{Binding Player.Name}" />
+            <TextBlock x:Name="statusTextBlock" Margin="5" Text="{Binding StatusText}" />
+        </StackPanel>
+        <GridView Margin="10" x:Name="GameRoomsList" SelectionMode="None" ItemsSource="{Binding GameRooms}">
+            <RelativePanel.Below>statusGrid</RelativePanel.Below>
             <RelativePanel.AlignRightWithPanel>True</RelativePanel.AlignRightWithPanel>
             <RelativePanel.AlignLeftWithPanel>True</RelativePanel.AlignLeftWithPanel>
             <RelativePanel.AlignBottomWithPanel>True</RelativePanel.AlignBottomWithPanel>

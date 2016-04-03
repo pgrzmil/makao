@@ -31,15 +31,32 @@ namespace Makao.Game.ViewModels
             {
                 Value = suspensionState[nameof(Value)]?.ToString();
             }
-
+            StatusText = "Connecting";
+            Connect().Forget();
             FetchGameRooms().Forget();
             await Task.CompletedTask;
         }
 
+        private async Task Connect()
+        {
+            if (CacheService.Player == null)
+            {
+                var proxy = new HubProxyService("SessionHub");
+                var player = await proxy.InvokeHubMethod<Player>("Connect");
+                if (player != null)
+                {
+                    CacheService.Player = player;
+                    RaisePropertyChanged("Player");
+                    StatusText = "Connected";
+                }
+            }
+        }
+
         private async Task FetchGameRooms()
         {
-            var proxy = new HubProxyService();
-            var gamerooms = await proxy.InvokeHubMethod<IList<GameRoom>>("GameRoomHub", "GetGameRooms");
+            var proxy = new HubProxyService("GameRoomHub");
+            var gamerooms = await proxy.InvokeHubMethod<IList<GameRoom>>("GetGameRooms");
+
             CacheService.GameRooms = new ObservableCollection<GameRoom>(gamerooms);
             RaisePropertyChanged("GameRooms");
         }
