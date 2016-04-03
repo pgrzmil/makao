@@ -20,5 +20,13 @@ namespace Makao.Game.Models
                 return string.Format("{0}/{1} players", Players != null ? Players.Count : 0, NumberOfPlayers);
             }
         }
+
+        public Card TopCard
+        {
+            get
+            {
+                return stack == null ? null : stack.Last();
+            }
+        }
     }
 }

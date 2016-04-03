@@ -1,4 +1,4 @@
-using Makao.Game.Services.SettingsServices;
+using Makao.Game.Services;
 using System.Threading.Tasks;
 using Template10.Common;
 using Template10.Controls;

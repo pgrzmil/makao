@@ -7,15 +7,18 @@
       xmlns:controls="using:Template10.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="using:Makao.Game.Views"
+      xmlns:converters="using:Makao.Game.Converters"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:vm="using:Makao.Game.ViewModels" x:Name="ThisPage" mc:Ignorable="d">
 
     <Page.DataContext>
         <vm:GameViewModel x:Name="ViewModel" />
     </Page.DataContext>
+    <Page.Resources>
+        <converters:CardImageConverter x:Key="cardImageConveter" />
+    </Page.Resources>
 
     <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="AdaptiveVisualStateGroup">
                 <VisualState x:Name="VisualStateNarrow">
@@ -44,84 +47,47 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-
-        <!--  header  -->
-        <controls:PageHeader x:Name="pageHeader" Frame="{x:Bind Frame}" Text="Game Page">
-            <!--  place stretched, across top  -->
+        <controls:PageHeader x:Name="pageHeader" Frame="{x:Bind Frame}" Text="{x:Bind ViewModel.HeaderText}">
             <RelativePanel.AlignTopWithPanel>True</RelativePanel.AlignTopWithPanel>
             <RelativePanel.AlignRightWithPanel>True</RelativePanel.AlignRightWithPanel>
             <RelativePanel.AlignLeftWithPanel>True</RelativePanel.AlignLeftWithPanel>
         </controls:PageHeader>
 
-        <!--  content  -->
-        <!--
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            -->
-        <!--  place below page header  -->
-        <!--
+        <Grid MaxHeight="250" MaxWidth="500">
+            <RelativePanel.AlignHorizontalCenterWithPanel>True</RelativePanel.AlignHorizontalCenterWithPanel>
+            <RelativePanel.AlignVerticalCenterWithPanel>True</RelativePanel.AlignVerticalCenterWithPanel>
 
-            <StackPanel>
-                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="You passed:" />
-                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{x:Bind ViewModel.Value, Mode=OneWay, FallbackValue=DesigntimeValue}" />
-            </StackPanel>
-        </ScrollViewer>-->
-        <Grid Padding="12,8,12,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <RelativePanel.Below>pageHeader</RelativePanel.Below>
-            <RelativePanel.AlignLeftWithPanel>True</RelativePanel.AlignLeftWithPanel>
-            <RelativePanel.AlignRightWithPanel>True</RelativePanel.AlignRightWithPanel>
-            <RelativePanel.AlignBottomWithPanel>True</RelativePanel.AlignBottomWithPanel>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <StackPanel Orientation="Vertical" Grid.Column="1">
-                <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center" Height="200">
-                    <Image Source="ms-appx:///Assets/avatar.png" />
-                </Viewbox>
-                <TextBlock Text="{x:Bind ViewModel.Player1.Name, Mode=OneWay}" Style="{StaticResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" />
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="7" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32" />
-                    <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center" Height="50">
-                        <Image Source="ms-appx:///Assets/card_back.png" />
-                    </Viewbox>
-                </StackPanel>
-            </StackPanel>
-            <StackPanel Orientation="Vertical" Grid.Row="1" VerticalAlignment="Center">
-                <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center" Height="200">
-                    <Image Source="ms-appx:///Assets/avatar.png" />
-                </Viewbox>
-                <TextBlock Text="Gracz 1" Style="{StaticResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" />
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="7" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32" />
-                    <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center" Height="50">
-                        <Image Source="ms-appx:///Assets/card_back.png" />
-                    </Viewbox>
-                </StackPanel>
-            </StackPanel>
-            <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">
-                <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center" Height="200">
-                    <Image Source="ms-appx:///Assets/avatar.png" />
-                </Viewbox>
-                <TextBlock Text="Gracz 1" Style="{StaticResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" />
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="7" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32" />
-                    <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center" Height="50">
-                        <Image Source="ms-appx:///Assets/card_back.png" />
-                    </Viewbox>
-                </StackPanel>
-            </StackPanel>
-            <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="1">
-                <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center" Height="200">
-                    <Image Source="ms-appx:///Assets/avatar.png" />
-                </Viewbox>
-                <TextBlock Text="Gracz 1" Style="{StaticResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" />
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="GetCard" Command="{Binding TakeCardCommand}">
+                    <Image Source="ms-appx:///Assets/Cards/cardBackBlue.png" />
+                </Button>
+                <Image Source="{Binding GameRoom.TopCard, Converter={StaticResource cardImageConveter}}" />
             </StackPanel>
         </Grid>
+
+        <StackPanel Margin="10,0,0,0">
+            <RelativePanel.AlignLeftWithPanel>True</RelativePanel.AlignLeftWithPanel>
+            <RelativePanel.AlignVerticalCenterWithPanel>True</RelativePanel.AlignVerticalCenterWithPanel>
+
+            <TextBlock Text="{Binding Opponent1.Name}" Style="{StaticResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Margin="0,10,0,0">
+            <RelativePanel.Below>pageHeader</RelativePanel.Below>
+            <RelativePanel.AlignHorizontalCenterWithPanel>True</RelativePanel.AlignHorizontalCenterWithPanel>
+
+            <TextBlock Text="{Binding Opponent2.Name}" Style="{StaticResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Margin="0,0,10,0">
+            <RelativePanel.AlignRightWithPanel>True</RelativePanel.AlignRightWithPanel>
+            <RelativePanel.AlignVerticalCenterWithPanel>True</RelativePanel.AlignVerticalCenterWithPanel>
+
+            <TextBlock Text="{Binding Opponent3.Name}" Style="{StaticResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Margin="0,0,0,10">
+            <RelativePanel.AlignBottomWithPanel>True</RelativePanel.AlignBottomWithPanel>
+            <RelativePanel.AlignHorizontalCenterWithPanel>True</RelativePanel.AlignHorizontalCenterWithPanel>
+
+            <TextBlock Text="{Binding Player.Name}" Style="{StaticResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" />
+        </StackPanel>
     </RelativePanel>
 </Page>

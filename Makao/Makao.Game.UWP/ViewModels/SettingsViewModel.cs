@@ -1,7 +1,7 @@
+using Makao.Game.Services;
 using System;
 using System.Threading.Tasks;
 using Template10.Mvvm;
-using Template10.Services.SettingsService;
 using Windows.UI.Xaml;
 
 namespace Makao.Game.ViewModels
@@ -14,7 +14,7 @@ namespace Makao.Game.ViewModels
 
     public class SettingsPartViewModel : ViewModelBase
     {
-        Services.SettingsServices.SettingsService _settings;
+        SettingsService _settings;
 
         public SettingsPartViewModel()
         {
@@ -24,7 +24,7 @@ namespace Makao.Game.ViewModels
             }
             else
             {
-                _settings = Services.SettingsServices.SettingsService.Instance;
+                _settings = SettingsService.Instance;
             }
         }
 

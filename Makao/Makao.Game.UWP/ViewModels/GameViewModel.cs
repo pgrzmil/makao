@@ -1,3 +1,5 @@
+using Makao.Game.Models;
+using Makao.Game.Services;
 using Makao.Models;
 using System;
 using System.Collections.Generic;
@@ -13,19 +15,23 @@ namespace Makao.Game.ViewModels
 {
     public class GameViewModel : BaseViewModel
     {
-        public GameViewModel()
+        public GameViewModel() : base()
         {
+            TakeCardCommand = new DelegateCommand(() => { return; });
         }
 
-        public GameRoom GameRoom { get; set; }
+        public GameRoomModel GameRoom { get; set; }
+        public DelegateCommand TakeCardCommand { get; set; }
 
-        public Player Player1 { get; set; }
-        public Player Player2 { get; set; }
-        public Player Player3 { get; set; }
-        public Player Player { get; set; }
+        public Player Opponent1 { get { return new Player("Opponent 1"); } }
+        public Player Opponent2 { get { return new Player("Opponent 2"); } }
+        public Player Opponent3 { get { return new Player("Opponent 3"); } }
+        public Player Player { get { return new Player("Player"); } }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
+            GameRoom = CacheService.GameRooms.FirstOrDefault(x => x.GameRoomId == parameter.ToString());
+            HeaderText = string.Format("MAKAO - {0}", GameRoom.Name);
             await Task.CompletedTask;
         }
 

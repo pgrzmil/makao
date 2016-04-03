@@ -17,8 +17,9 @@ namespace Makao.Game.ViewModels
 
         public ObservableCollection<GameRoomModel> GameRooms { get { return CacheService.GameRooms; } }
 
-        public GameRoomViewModel()
+        public GameRoomViewModel() : base()
         {
+            HeaderText = "MAKAO - PICK GAME ROOM";
             GoToDetails = new DelegateCommand<string>((id) => NavigationService.Navigate(typeof(Views.GamePage), id));
         }
 

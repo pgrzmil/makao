@@ -3,7 +3,7 @@ using Template10.Common;
 using Template10.Utils;
 using Windows.UI.Xaml;
 
-namespace Makao.Game.Services.SettingsServices
+namespace Makao.Game.Services
 {
     public class SettingsService
     {

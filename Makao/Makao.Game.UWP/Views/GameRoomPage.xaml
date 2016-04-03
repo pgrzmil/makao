@@ -47,7 +47,7 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <controls:PageHeader x:Name="pageHeader" Text="MAKAO - Pick game room">
+        <controls:PageHeader x:Name="pageHeader" Text="{x:Bind ViewModel.HeaderText}">
             <RelativePanel.AlignTopWithPanel>True</RelativePanel.AlignTopWithPanel>
             <RelativePanel.AlignRightWithPanel>True</RelativePanel.AlignRightWithPanel>
             <RelativePanel.AlignLeftWithPanel>True</RelativePanel.AlignLeftWithPanel>
@@ -60,7 +60,6 @@
         </controls:PageHeader>
 
         <GridView Margin="10" x:Name="GameRoomsList" SelectionMode="None" ItemsSource="{Binding GameRooms}">
-
             <RelativePanel.Below>pageHeader</RelativePanel.Below>
             <RelativePanel.AlignRightWithPanel>True</RelativePanel.AlignRightWithPanel>
             <RelativePanel.AlignLeftWithPanel>True</RelativePanel.AlignLeftWithPanel>
