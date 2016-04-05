@@ -19,8 +19,6 @@ namespace Makao.Game.ViewModels
 
         public void GotoAbout() => NavigationService.Navigate(typeof(Views.SettingsPage), 2);
 
-        public Player Player { get { return CacheService.Player; } }
-
         private string statusText;
 
         public string StatusText

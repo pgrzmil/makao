@@ -60,8 +60,12 @@
             <RelativePanel.AlignLeftWithPanel>True</RelativePanel.AlignLeftWithPanel>
 
             <TextBlock x:Name="statusTextBlock" Margin="5" Text="{Binding StatusText}" />
-            <Button Content="Sit to table" Command="{Binding SitToTableCommand}" />
-            <Button Content="Ready" Command="{Binding SetReadyCommand}" />
+            <Button Margin="4,0" Content="Sit to table" Command="{Binding SitToTableCommand}" />
+            <Button Margin="4,0" Content="Ready" Command="{Binding SetReadyCommand}" />
+            <Grid Width="100" />
+            <Button Margin="4,0" Content="Connect Ops" Command="{Binding ConnectOpponentsCommand}" />
+            <Button Margin="4,0" Content="SetReady Ops" Command="{Binding SetReadyOpponentsCommand}" />
+            <Button Margin="4,0" Content="Play opponent round" Command="{Binding PlayOpponentRoundCommand}" />
         </StackPanel>
 
         <Grid>
