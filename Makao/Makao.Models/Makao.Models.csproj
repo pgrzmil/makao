@@ -44,6 +44,7 @@
     <Compile Include="Card.cs" />
     <Compile Include="CardRanks.cs" />
     <Compile Include="CardSuits.cs" />
+    <Compile Include="ChatMessage.cs" />
     <Compile Include="Deck.cs" />
     <Compile Include="GameRoom.cs" />
     <Compile Include="Player.cs" />
