@@ -15,9 +15,7 @@ namespace Makao.Tests.ModelsTests
         public void GameRoom_CreateGameRoom_Test()
         {
             var expectedGameRoomId = "expectedGameRoomId";
-            var game = new GameRoom { GameRoomId = expectedGameRoomId };
-            GameRoomMock gameRoom = null;
-            gameRoom = new GameRoomMock(game);
+            var gameRoom = new GameRoom { GameRoomId = expectedGameRoomId };
 
             var actualGameRoomId = gameRoom.GameRoomId;
 
@@ -28,10 +26,7 @@ namespace Makao.Tests.ModelsTests
         [TestMethod]
         public void GameRoom_AddPlayer_Test()
         {
-            var game = new GameRoom { GameRoomId = "1" };
-
-            GameRoomMock gameRoom = null;
-            gameRoom = new GameRoomMock(game);
+            var gameRoom = new GameRoom { GameRoomId = "1" };
 
             var expectedPlayer = new Player("PlayerName");
 
@@ -45,10 +40,7 @@ namespace Makao.Tests.ModelsTests
         [TestMethod]
         public void GameRoom_AddMorePlayersThanMaximum_Test()
         {
-            var game = new GameRoom { GameRoomId = "1" };
-
-            GameRoomMock gameRoom = null;
-            gameRoom = new GameRoomMock(game);
+            var gameRoom = new GameRoomMock { GameRoomId = "1" };
 
             var randNumber = rand.Next(1, 5);
             var addedPlayers = new List<Player>();
@@ -76,10 +68,7 @@ namespace Makao.Tests.ModelsTests
         [TestMethod]
         public void GameRoom_RemovePlayer_Test()
         {
-            var game = new GameRoom { GameRoomId = "1" };
-
-            GameRoomMock gameRoom = null;
-            gameRoom = new GameRoomMock(game);
+            var gameRoom = new GameRoomMock { GameRoomId = "1" };
 
             var numberOfPlayers = rand.Next(1, gameRoom.NumberOfPlayers);
             AddPlayers(gameRoom, numberOfPlayers);
@@ -98,10 +87,7 @@ namespace Makao.Tests.ModelsTests
         [TestMethod]
         public void GameRoom_StartGameWithoutPlayers_Test()
         {
-            var game = new GameRoom { GameRoomId = "1" };
-
-            GameRoomMock gameRoom = null;
-            gameRoom = new GameRoomMock(game);
+            var gameRoom = new GameRoomMock { GameRoomId = "1" };
 
             gameRoom.Start();
 
@@ -111,10 +97,7 @@ namespace Makao.Tests.ModelsTests
         [TestMethod]
         public void GameRoom_StartGame_Test()
         {
-            var game = new GameRoom { GameRoomId = "1" };
-
-            GameRoomMock gameRoom = null;
-            gameRoom = new GameRoomMock(game);
+            var gameRoom = new GameRoomMock { GameRoomId = "1" };
 
             var numberOfPlayers = rand.Next(2, gameRoom.NumberOfPlayers);
             AddPlayers(gameRoom, numberOfPlayers);
@@ -139,17 +122,14 @@ namespace Makao.Tests.ModelsTests
         [TestMethod]
         public void GameRoom_DealCards_Test()
         {
-            var game = new GameRoom { GameRoomId = "1" };
-
-            GameRoomMock gameRoom = null;
-            gameRoom = new GameRoomMock(game);
+            var gameRoom = new GameRoomMock { GameRoomId = "1" };
 
             var numberOfPlayers = rand.Next(2, gameRoom.NumberOfPlayers);
             AddPlayers(gameRoom, numberOfPlayers);
             gameRoom.Start();
 
             var expectedNumberOfCardsLeftInDeck = 52 - (5 * numberOfPlayers) - 1;
-            var actualNumberOfCardsLeftInDeck = gameRoom.Deck.Cards.Count;
+            var actualNumberOfCardsLeftInDeck = (gameRoom.Deck as DeckMock).GetCards().Count;
 
             Assert.AreEqual(expectedNumberOfCardsLeftInDeck, actualNumberOfCardsLeftInDeck);
 
@@ -157,7 +137,7 @@ namespace Makao.Tests.ModelsTests
             {
                 foreach (var card in player.Hand)
                 {
-                    Assert.IsFalse(gameRoom.Deck.Cards.Contains(card));
+                    Assert.IsFalse((gameRoom.Deck as DeckMock).GetCards().Contains(card));
                 }
             }
         }
@@ -165,16 +145,13 @@ namespace Makao.Tests.ModelsTests
         [TestMethod]
         public void GameRoom_PlayCard_Test()
         {
-            var game = new GameRoom { GameRoomId = "1" };
-
-            GameRoomMock gameRoom = null;
-            gameRoom = new GameRoomMock(game);
+            var gameRoom = new GameRoomMock { GameRoomId = "1" };
 
             var numberOfPlayers = rand.Next(2, gameRoom.NumberOfPlayers);
             AddPlayers(gameRoom, numberOfPlayers);
             gameRoom.Start();
 
-            var currentPlayer = gameRoom.CurrentPlayer;
+            var currentPlayer = gameRoom.CurrentPlayer();
             var currentPlayerIndex = gameRoom.CurrentPlayerIndex;
             var playedCard = currentPlayer.Hand.First();
 
@@ -198,10 +175,7 @@ namespace Makao.Tests.ModelsTests
         [TestMethod]
         public void GameRoom_UpdatePlayerIndex_Test()
         {
-            var game = new GameRoom { GameRoomId = "1" };
-
-            GameRoomMock gameRoom = null;
-            gameRoom = new GameRoomMock(game);
+            var gameRoom = new GameRoomMock { GameRoomId = "1" };
 
             var numberOfPlayers = rand.Next(2, gameRoom.NumberOfPlayers);
             AddPlayers(gameRoom, numberOfPlayers);
@@ -219,16 +193,13 @@ namespace Makao.Tests.ModelsTests
         [TestMethod]
         public void GameRoom_GameOver_Test()
         {
-            var game = new GameRoom { GameRoomId = "1" };
-
-            GameRoomMock gameRoom = null;
-            gameRoom = new GameRoomMock(game);
+            var gameRoom = new GameRoomMock { GameRoomId = "1" };
 
             var numberOfPlayers = rand.Next(2, gameRoom.NumberOfPlayers);
             AddPlayers(gameRoom, numberOfPlayers);
             gameRoom.Start();
 
-            var currentPlayer = gameRoom.CurrentPlayer;
+            var currentPlayer = gameRoom.CurrentPlayer();
             currentPlayer.Hand.RemoveRange(0, currentPlayer.Hand.Count - 1);
 
             gameRoom.GameOver += (winner) =>

@@ -16,6 +16,7 @@ namespace Makao.Game.ViewModels
         public DelegateCommand<string> GoToDetails { get; set; }
 
         public ObservableCollection<GameRoom> GameRooms { get { return CacheService.GameRooms; } }
+        public Player Player { get { return CacheService.Player; } }
 
         public GameRoomViewModel() : base()
         {

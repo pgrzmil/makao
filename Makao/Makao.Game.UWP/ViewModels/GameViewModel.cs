@@ -40,21 +40,21 @@ namespace Makao.Game.ViewModels
                 gameRoom = value;
                 RaisePropertyChanged("GameRoom");
                 RaisePropertyChanged("TopCard");
-                RaisePropertyChanged("Hand");
+                RaisePropertyChanged("Player");
                 RaisePropertyChanged("Opponent1");
+                RaisePropertyChanged("Opponent1Status");
                 RaisePropertyChanged("Opponent2");
+                RaisePropertyChanged("Opponent2Status");
                 RaisePropertyChanged("Opponent3");
+                RaisePropertyChanged("Opponent3Status");
             }
         }
 
-        public Card TopCard { get { return GameRoom == null || GameRoom.Stack == null ? null : GameRoom.Stack.Last(); } }
-        public List<Card> Hand { get { return Player == null || Player.Hand == null ? null : Player.Hand; } }
-        public Player Player { get { return GameRoom == null || CacheService.Player == null ? null : GameRoom.Players.FirstOrDefault(x => x.SessionId == CacheService.Player.SessionId); } }
+        public bool IsGameOver { get; set; }
+        public string GameOverText { get; set; }
 
-        public DelegateCommand SetReadyCommand { get; set; }
-        public DelegateCommand SitToTableCommand { get; set; }
-        public DelegateCommand TakeCardCommand { get; set; }
-        public DelegateCommand<Card> PlayCardCommand { get; set; }
+        public Card TopCard { get { return GameRoom == null || GameRoom.Stack == null ? null : GameRoom.Stack.Last(); } }
+        public Player Player { get { return GameRoom != null && CacheService.Player != null ? GameRoom.Players.FirstOrDefault(x => x.SessionId == CacheService.Player.SessionId) : null; } }
 
         public Player Opponent1
         {
@@ -72,11 +72,33 @@ namespace Makao.Game.ViewModels
             }
         }
 
+        public string Opponent1Status
+        {
+            get
+            {
+                var status = "";
+                if (GameRoom != null && Opponent1 != null)
+                {
+                    if (GameRoom.IsRunning)
+                    {
+                        status = string.Format("{0} cards", Opponent1.Hand.Count);
+                        if (Opponent1.Hand.Count == 1)
+                            status += " MAKAO!";
+                    }
+                    else if (Opponent1.IsReady)
+                    {
+                        status = "Ready";
+                    }
+                }
+                return status;
+            }
+        }
+
         public Player Opponent2
         {
             get
             {
-                if (GameRoom == null || (GameRoom.Players.Count == 1 && GameRoom.Players[0].SessionId == Player.SessionId))
+                if (GameRoom == null || (GameRoom.Players.Count == 1 && GameRoom.Players[0] == Player))
                     return null;
                 var opponentIndex = 1;
                 if (Player != null)
@@ -88,11 +110,33 @@ namespace Makao.Game.ViewModels
             }
         }
 
+        public string Opponent2Status
+        {
+            get
+            {
+                var status = "";
+                if (GameRoom != null && Opponent2 != null)
+                {
+                    if (GameRoom.IsRunning)
+                    {
+                        status = string.Format("{0} cards", Opponent2.Hand.Count);
+                        if (Opponent2.Hand.Count == 1)
+                            status += " MAKAO!";
+                    }
+                    else if (Opponent2.IsReady)
+                    {
+                        status = "Ready";
+                    }
+                }
+                return status;
+            }
+        }
+
         public Player Opponent3
         {
             get
             {
-                if (GameRoom == null || (GameRoom.Players.Count == 1 && GameRoom.Players[0].SessionId == Player.SessionId))
+                if (GameRoom == null || (GameRoom.Players.Count == 1 && GameRoom.Players[0] == Player))
                     return null;
                 var opponentIndex = 2;
                 if (Player != null)
@@ -101,6 +145,28 @@ namespace Makao.Game.ViewModels
                     opponentIndex = offset + 3 >= GameRoom.NumberOfPlayers ? 0 : offset + 3;
                 }
                 return GameRoom.Players.ElementAtOrDefault(opponentIndex);
+            }
+        }
+
+        public string Opponent3Status
+        {
+            get
+            {
+                var status = "";
+                if (GameRoom != null && Opponent3 != null)
+                {
+                    if (GameRoom.IsRunning)
+                    {
+                        status = string.Format("{0} cards", Opponent3.Hand.Count);
+                        if (Opponent3.Hand.Count == 1)
+                            status += " MAKAO!";
+                    }
+                    else if (Opponent3.IsReady)
+                    {
+                        status = "Ready";
+                    }
+                }
+                return status;
             }
         }
 
@@ -121,20 +187,33 @@ namespace Makao.Game.ViewModels
                 opponent.Player = await proxy.InvokeHubMethod<Player>("Connect");
 
                 opponent.Proxy = new HubProxyService("GameRoomHub", SubscribeCallbacks);
+
                 await opponent.Proxy.InvokeHubMethod<bool>("EnterGameRoom", opponent.Player.SessionId, GameRoom.GameRoomId);
                 Opponents.Add(opponent);
             }
-
-            RaisePropertyChanged("Opponent1");
-            RaisePropertyChanged("Opponent2");
-            RaisePropertyChanged("Opponent3");
         }
 
         private async void SetReadyOpponents()
-        { }
+        {
+            foreach (var opponent in Opponents)
+            {
+                opponent.Player.IsReady = !opponent.Player.IsReady;
+                var status = await opponent.Proxy.InvokeHubMethod<bool>("SetPlayerReady", opponent.Player.SessionId, GameRoom.GameRoomId, opponent.Player.IsReady);
+            }
+        }
 
         private async void PlayOpponentRound()
-        { }
+        {
+            if (GameRoom.IsRunning && GameRoom.CurrentPlayer() != Player)
+            {
+                var opponent = Opponents.FirstOrDefault(o => o.Player.SessionId == GameRoom.CurrentPlayer().SessionId);
+                if (opponent != null)
+                {
+                    var card = GameRoom.CurrentPlayer().Hand.FirstOrDefault();
+                    var status = await opponent.Proxy.InvokeHubMethod<bool>("PlayCard", opponent.Player.SessionId, GameRoom.GameRoomId, card);
+                }
+            }
+        }
 
         #endregion opponents helper
 
@@ -142,14 +221,6 @@ namespace Makao.Game.ViewModels
         {
             GameRoom = CacheService.GameRooms.FirstOrDefault(x => x.GameRoomId == parameter.ToString());
             HeaderText = string.Format("MAKAO - {0}", GameRoom.Name);
-
-            //For ui tests purposes
-            //GameRoom.Stack = new List<Card>() { new Card { Rank = CardRanks.Ace, Suit = CardSuits.Clubs } };
-            //Player.Hand = new List<Card>() { new Card { Rank = CardRanks.Ace, Suit = CardSuits.Clubs },
-            //    new Card { Rank = CardRanks.Ace, Suit = CardSuits.Hearts },
-            //    new Card { Rank = CardRanks.Ace, Suit = CardSuits.Diamonds } };
-            //RaisePropertyChanged("TopCard");
-            //RaisePropertyChanged("Hand");
 
             proxy = new HubProxyService("GameRoomHub", SubscribeCallbacks);
 
@@ -176,29 +247,57 @@ namespace Makao.Game.ViewModels
 
         #region Actions
 
+        public DelegateCommand SetReadyCommand { get; set; }
+        public DelegateCommand SitToTableCommand { get; set; }
+        public DelegateCommand TakeCardCommand { get; set; }
+        public DelegateCommand<Card> PlayCardCommand { get; set; }
+
         private async void SitToTable()
         {
-            var status = await proxy.InvokeHubMethod<bool>("EnterGameRoom", Player.SessionId, GameRoom.GameRoomId);
-            StatusText = status ? "EnterGameRoom successful" : "EnterGameRoom failed";
+            bool status;
+
+            if (Player == null)
+            {
+                status = await proxy.InvokeHubMethod<bool>("EnterGameRoom", CacheService.Player.SessionId, GameRoom.GameRoomId);
+            }
+            else
+            {
+                status = await proxy.InvokeHubMethod<bool>("LeaveGameRoom", CacheService.Player.SessionId, GameRoom.GameRoomId);
+            }
         }
 
         private async void SetReady()
         {
-            Player.IsReady = !Player.IsReady;
-            var status = await proxy.InvokeHubMethod<bool>("SetPlayerReady", Player.SessionId, GameRoom.GameRoomId, Player.IsReady);
-            StatusText = status ? "SetPlayerReady successful" : "SetPlayerReady failed";
+            try
+            {
+                Player.IsReady = !Player.IsReady;
+                var status = await proxy.InvokeHubMethod<bool>("SetPlayerReady", Player.SessionId, GameRoom.GameRoomId, Player.IsReady);
+            }
+            catch (InvalidOperationException)
+            {
+            }
         }
 
         private async void TakeCard()
         {
-            var status = await proxy.InvokeHubMethod<bool>("TakeCard", Player.SessionId, GameRoom.GameRoomId);
-            StatusText = status ? "TakeCard successful" : "TakeCard failed";
+            try
+            {
+                var status = await proxy.InvokeHubMethod<bool>("TakeCard", Player.SessionId, GameRoom.GameRoomId);
+            }
+            catch (InvalidOperationException)
+            {
+            }
         }
 
         private async void PlayCard(Card card)
         {
-            var status = await proxy.InvokeHubMethod<bool>("PlayCard", Player.SessionId, GameRoom.GameRoomId, card);
-            StatusText = status ? "PlayCard successful" : "PlayCard failed";
+            try
+            {
+                var status = await proxy.InvokeHubMethod<bool>("PlayCard", Player.SessionId, GameRoom.GameRoomId, card);
+            }
+            catch (InvalidOperationException)
+            {
+            }
         }
 
         #endregion Actions
@@ -212,7 +311,12 @@ namespace Makao.Game.ViewModels
 
         private void GameOver(Player winner)
         {
-            StatusText = "Game over. Winner " + winner.Name;
+            GameRoom.IsRunning = false;
+            IsGameOver = true;
+            GameOverText = "Game over. Winner " + winner.Name;
+            RaisePropertyChanged("IsGameOver");
+            RaisePropertyChanged("GameOverText");
+            RaisePropertyChanged("GameRoom");
         }
 
         private void PlayerTookCard(GameRoom gameRoom)

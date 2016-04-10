@@ -1,5 +1,4 @@
-﻿using Makao.Hub.Models;
-using Makao.Models;
+﻿using Makao.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +7,8 @@ using System.Threading.Tasks;
 
 namespace Makao.Tests.ModelsTests
 {
-    internal class GameRoomMock : GameRoomModel
+    public class GameRoomMock : GameRoom
     {
-        public GameRoomMock(GameRoom gameRoom) : base(gameRoom)
-        {
-        }
-
         internal void UpdateCurrentPlayerIndexMock()
         {
             UpdateCurrentPlayerIndex();
@@ -24,9 +19,18 @@ namespace Makao.Tests.ModelsTests
             CheckIfWinner(player);
         }
 
-        internal void PopulateDeckMock()
+        public override void Start()
         {
-            PopulateDeck();
+            if (Players.Count > 1)
+            {
+                IsRunning = true;
+                CurrentPlayerIndex = rand.Next(Players.Count);
+
+                Stack = new List<Card>();
+                Deck = new DeckMock();
+
+                DealCards();
+            }
         }
     }
 }
