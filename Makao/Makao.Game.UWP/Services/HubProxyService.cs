@@ -2,6 +2,7 @@
 using Microsoft.AspNet.SignalR.Client;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -21,7 +22,23 @@ namespace Makao.Game.Services
 
             proxy = connection.CreateHubProxy(hub);
             subscribeCallBacks?.Invoke(proxy);
+            connection.Received += Connection_Received;
+            connection.StateChanged += Connection_StateChanged;
             connection.Start().Wait();
+        }
+
+        private void Connection_StateChanged(StateChange obj)
+        {
+            if (obj.NewState == ConnectionState.Disconnected)
+            {
+                connection.Start().Wait();
+            }
+        }
+
+        private void Connection_Received(string obj)
+        {
+            Debug.WriteLine("\n\nReceived:");
+            Debug.WriteLine(obj);
         }
 
         public void ResetConnection()

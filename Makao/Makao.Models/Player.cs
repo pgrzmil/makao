@@ -13,14 +13,15 @@ namespace Makao.Models
         public List<Card> Hand { get; set; }
         public string SessionId { get; set; }
         public string ConnectionId { get; set; }
-        public string PlayerId { get; set; }
         public bool IsReady { get; set; }
+        public bool IsTurn { get; set; }
 
         public Player(string name)
         {
             Name = name;
             Hand = new List<Card>();
             IsReady = false;
+            IsTurn = false;
         }
     }
 }

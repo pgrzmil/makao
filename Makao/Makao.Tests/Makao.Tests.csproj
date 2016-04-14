@@ -64,6 +64,7 @@
     <Compile Include="HubsTests\GameRoomHubTests.cs" />
     <Compile Include="HubsTests\HubProxyManager.cs" />
     <Compile Include="HubsTests\HubTests.cs" />
+    <Compile Include="ModelsTests\DeckMock.cs" />
     <Compile Include="ModelsTests\DeckTests.cs" />
     <Compile Include="ModelsTests\GameRoomMock.cs" />
     <Compile Include="ModelsTests\GameRoomTests.cs" />

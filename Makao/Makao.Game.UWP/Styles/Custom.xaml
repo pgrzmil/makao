@@ -11,6 +11,7 @@
     <Color x:Key="ContrastColor">White</Color>
 
     <converters:BooleanToVisibilityConverter x:Key="boolVisibilityConverter" />
+    <converters:BooleanToVisibilityNegationConverter x:Key="boolVisibilityNegConverter" />
 
     <ResourceDictionary.ThemeDictionaries>
 

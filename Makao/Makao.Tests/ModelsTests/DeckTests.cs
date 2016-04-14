@@ -1,5 +1,4 @@
-﻿using Makao.Hub.Models;
-using Makao.Models;
+﻿using Makao.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
@@ -14,20 +13,19 @@ namespace Makao.Tests.ModelsTests
         [TestMethod]
         public void Deck_CreateDeck_Test()
         {
-            GameRoomMock gameRoom = PrepareGameRoom();
-            gameRoom.PopulateDeckMock();
+            var deck = new DeckMock();
 
-            Assert.IsNotNull(gameRoom.Deck);
-            Assert.AreEqual(52, gameRoom.Deck.Cards.Count);
+            Assert.IsNotNull(deck);
+            Assert.AreEqual(52, deck.GetCards().Count);
         }
 
         [TestMethod]
         public void Deck_Shuffle_Test()
         {
-            GameRoomMock gameRoom = PrepareGameRoom();
+            var deck = new DeckMock();
 
             var ranks = Enum.GetValues(typeof(Models.CardRanks)).Cast<Models.CardRanks>();
-            var numberOfCardsWithSameSuit = gameRoom.Deck.Cards.Take(ranks.Count()).Count(c => c.Suit == gameRoom.Deck.Cards.First().Suit);
+            var numberOfCardsWithSameSuit = deck.GetCards().Take(ranks.Count()).Count(c => c.Suit == deck.GetCards().First().Suit);
 
             Assert.AreNotEqual(ranks.Count(), numberOfCardsWithSameSuit);
         }
@@ -35,14 +33,14 @@ namespace Makao.Tests.ModelsTests
         [TestMethod]
         public void Deck_CreateDeckFromCollection_Test()
         {
-            GameRoomMock gameRoom = PrepareGameRoom();
+            var deck = new DeckMock();
 
-            var expectedCardsCount = rand.Next(2, gameRoom.Deck.Cards.Count - 2);
-            var expectedCards = gameRoom.TakeCards(expectedCardsCount);
+            var expectedCardsCount = rand.Next(2, deck.GetCards().Count - 2);
+            var expectedCards = deck.TakeCards(expectedCardsCount);
 
-            gameRoom.Deck = new Deck(expectedCards);
-            var actualCardsCount = gameRoom.Deck.Cards.Count;
-            var actualCards = gameRoom.Deck.Cards;
+            deck = new DeckMock(expectedCards);
+            var actualCardsCount = deck.GetCards().Count;
+            var actualCards = deck.GetCards();
 
             Assert.AreEqual(expectedCardsCount, actualCardsCount);
             for (int i = 0; i < expectedCardsCount; i++)
@@ -54,15 +52,15 @@ namespace Makao.Tests.ModelsTests
         [TestMethod]
         public void Deck_TakeCard_Test()
         {
-            GameRoomMock gameRoom = PrepareGameRoom();
+            var deck = new DeckMock();
 
-            var expectedCard = gameRoom.Deck.Cards.First();
-            var expectedLeftCardsCount = gameRoom.Deck.Cards.Count - 1;
-            var expectedNextCard = gameRoom.Deck.Cards[1];
+            var expectedCard = deck.GetCards().First();
+            var expectedLeftCardsCount = deck.GetCards().Count - 1;
+            var expectedNextCard = deck.GetCards()[1];
 
-            var actualCard = gameRoom.TakeCards().First();
-            var actualLeftCardsCount = gameRoom.Deck.Cards.Count;
-            var actualNextCard = gameRoom.TakeCards().First();
+            var actualCard = deck.TakeCards().First();
+            var actualLeftCardsCount = deck.GetCards().Count;
+            var actualNextCard = deck.TakeCards().First();
 
             Assert.AreSame(expectedCard, actualCard);
             Assert.AreEqual(expectedLeftCardsCount, actualLeftCardsCount);
@@ -72,22 +70,22 @@ namespace Makao.Tests.ModelsTests
         [TestMethod]
         public void Deck_TakeCards_Test()
         {
-            GameRoomMock gameRoom = PrepareGameRoom();
+            var deck = new DeckMock();
 
-            var numberOfCardsToTake = rand.Next(2, gameRoom.Deck.Cards.Count);
+            var numberOfCardsToTake = rand.Next(2, deck.GetCards().Count);
 
-            var expectedTakenCards = gameRoom.Deck.Cards.Take(numberOfCardsToTake).ToList();
-            var expectedLeftCardsCount = gameRoom.Deck.Cards.Count - numberOfCardsToTake;
-            var expectedNextCard = gameRoom.Deck.Cards[numberOfCardsToTake];
+            var expectedTakenCards = deck.GetCards().Take(numberOfCardsToTake).ToList();
+            var expectedLeftCardsCount = deck.GetCards().Count - numberOfCardsToTake;
+            var expectedNextCard = deck.GetCards()[numberOfCardsToTake];
 
-            var actualTakenCards = gameRoom.TakeCards(numberOfCardsToTake);
-            var actualLeftCardsCount = gameRoom.Deck.Cards.Count;
-            var actualNextCard = gameRoom.TakeCards().First();
+            var actualTakenCards = deck.TakeCards(numberOfCardsToTake);
+            var actualLeftCardsCount = deck.GetCards().Count;
+            var actualNextCard = deck.TakeCards().First();
 
             Assert.AreEqual(expectedTakenCards.Count, actualTakenCards.Count, "Number of cards returned is incorrect");
             for (int i = 0; i < numberOfCardsToTake; i++)
             {
-                Assert.AreSame(expectedTakenCards[i], actualTakenCards[i], "Cards taken are not from begining of collection");
+                Assert.AreSame(expectedTakenCards[i], actualTakenCards[i], "GetCards() taken are not from begining of collection");
             }
             Assert.AreEqual(expectedLeftCardsCount, actualLeftCardsCount);
             Assert.AreSame(expectedNextCard, actualNextCard);
@@ -96,38 +94,26 @@ namespace Makao.Tests.ModelsTests
         [TestMethod]
         public void Deck_EmptyDeck_Test()
         {
-            GameRoomMock gameRoom = PrepareGameRoom();
+            var deck = new DeckMock();
 
-            var expectedTakenCardsCount = gameRoom.Deck.Cards.Count;
-            var actualTakenCardsCount = gameRoom.TakeCards(expectedTakenCardsCount).Count;
+            var expectedTakenCardsCount = deck.GetCards().Count;
+            var actualTakenCardsCount = deck.TakeCards(expectedTakenCardsCount).Count;
 
             var wasExceptionThrown = false;
             try
             {
-                gameRoom.TakeCards();
+                deck.TakeCards();
             }
             catch (NotEnoughCardsException)
             {
                 wasExceptionThrown = true;
                 var expectedLeftCardsCount = 0;
-                var actualLeftCardsCount = gameRoom.Deck.Cards.Count;
+                var actualLeftCardsCount = deck.GetCards().Count;
                 Assert.AreEqual(expectedLeftCardsCount, actualLeftCardsCount);
             }
 
             Assert.IsTrue(wasExceptionThrown);
             Assert.AreEqual(expectedTakenCardsCount, actualTakenCardsCount);
-        }
-
-        private static GameRoomMock PrepareGameRoom()
-        {
-            var game = new GameRoom { GameRoomId = "1" };
-            GameRoomMock gameRoom = null;
-            gameRoom = new GameRoomMock(game);
-
-            gameRoom.AddPlayer(new Player("PlayerName1"));
-            gameRoom.AddPlayer(new Player("PlayerName2"));
-            gameRoom.Start();
-            return gameRoom;
         }
     }
 }

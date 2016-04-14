@@ -28,3 +28,6 @@
 .vs
 /Makao/Makao.Data/obj/Debug
 /Makao/Makao.Hub.Models/obj/Debug
+/Makao/Makao.Game.UWP/bin/x86/Release
+/Makao/Makao.Game.UWP/obj/x86/Release
+/Makao/Makao.Data/obj/Release

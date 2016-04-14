@@ -1,5 +1,5 @@
-﻿using Makao.Data;
-using Makao.Hub.Models;
+﻿using Makao.Common.Extensions;
+using Makao.Data;
 using Makao.Models;
 using Microsoft.AspNet.SignalR;
 using System;
@@ -32,8 +32,7 @@ namespace Makao.Hub
         public bool EnterGameRoom(string sessionId, string gameRoomId)
         {
             var status = false;
-            var game = SharedData.GameRooms.FirstOrDefault(g => g.GameRoomId == gameRoomId);
-            var gameRoom = new GameRoomModel(game);
+            var gameRoom = SharedData.GameRooms.FirstOrDefault(g => g.GameRoomId == gameRoomId);
             var player = SharedData.Players.FirstOrDefault(p => p.SessionId == sessionId);
 
             if (gameRoom != null && player != null && gameRoom.Players.Count < gameRoom.NumberOfPlayers)
@@ -44,7 +43,7 @@ namespace Makao.Hub
                 gameRoom.AddPlayer(player);
 
                 Groups.Add(player.ConnectionId, gameRoom.GameRoomId).Wait();
-                Clients.Group(gameRoom.GameRoomId).PlayerEnteredRoom((gameRoom as GameRoom), player);
+                Clients.Group(gameRoom.GameRoomId).PlayerEnteredRoom(gameRoom, player);
                 status = true;
             }
 
@@ -53,7 +52,7 @@ namespace Makao.Hub
 
         public void LeaveGameRoom(string sessionId)
         {
-            var gameRooms = SharedData.GameRooms.Where(g => g.Players.Count(p => p.SessionId == sessionId) != 0).Select(g => new GameRoomModel(g)).ToList();
+            var gameRooms = SharedData.GameRooms.Where(g => g.Players.Count(p => p.SessionId == sessionId) != 0).ToList();
             var player = SharedData.Players.FirstOrDefault(p => p.SessionId == sessionId);
 
             foreach (var gameRoom in gameRooms)
@@ -62,7 +61,7 @@ namespace Makao.Hub
 
                 UpdateConnectionId(player);
                 Groups.Remove(player.ConnectionId, gameRoom.GameRoomId).Wait();
-                Clients.Group(gameRoom.GameRoomId).PlayerLeftRoom((gameRoom as GameRoom));
+                Clients.Group(gameRoom.GameRoomId).PlayerLeftRoom(gameRoom);
             }
         }
 
@@ -85,42 +84,41 @@ namespace Makao.Hub
                 UpdateConnectionId(player);
                 Clients.Group(gameRoom.GameRoomId).SetPlayerReadyResponse(gameRoom);
 
-                TryStartGame(new GameRoomModel(gameRoom));
+                TryStartGame(gameRoom);
             }
             return status;
         }
 
-        private Task TryStartGame(GameRoomModel gameRoom)
+        private void TryStartGame(GameRoom gameRoom)
         {
-            return new Task(() =>
-            {
-                var isEveryPlayerReady = gameRoom.Players.Count(p => p.IsReady) == gameRoom.NumberOfPlayers;
+            var isEveryPlayerReady = gameRoom.Players.Count(p => p.IsReady) == gameRoom.NumberOfPlayers;
 
-                if (isEveryPlayerReady)
-                {
-                    gameRoom.Start();
-                    Clients.Group(gameRoom.GameRoomId).NotifyGameStart((gameRoom as GameRoom));
-                }
-            });
+            if (isEveryPlayerReady)
+            {
+                gameRoom.Start();
+                Clients.Group(gameRoom.GameRoomId).NotifyGameStart(gameRoom);
+            }
         }
 
         public bool PlayCard(string sessionId, string gameRoomId, Card card)
         {
             var status = false;
-            var game = SharedData.GameRooms.FirstOrDefault(g => g.GameRoomId == gameRoomId);
-            var gameRoom = new GameRoomModel(game);
+            var gameRoom = SharedData.GameRooms.FirstOrDefault(g => g.GameRoomId == gameRoomId);
 
-            gameRoom.GameOver += (winner) =>
+            if (!gameRoom.HasGameOverListeners())
             {
-                Clients.Group(gameRoom.GameRoomId).GameOver(winner);
-                gameRoom.Reset();
-            };
+                gameRoom.GameOver += (winner) =>
+                {
+                    Clients.Group(gameRoom.GameRoomId).GameOver(winner);
+                    gameRoom.Reset();
+                };
+            }
 
             if (gameRoom != null)
             {
                 status = gameRoom.PlayCard(sessionId, card);
 
-                Clients.Group(gameRoom.GameRoomId).PlayerPlayedCard((gameRoom as GameRoom));
+                Clients.Group(gameRoom.GameRoomId).PlayerPlayedCard(gameRoom);
             }
 
             return status;
@@ -129,13 +127,12 @@ namespace Makao.Hub
         public bool TakeCard(string sessionId, string gameRoomId)
         {
             var status = false;
-            var game = SharedData.GameRooms.FirstOrDefault(g => g.GameRoomId == gameRoomId);
-            var gameRoom = new GameRoomModel(game);
+            var gameRoom = SharedData.GameRooms.FirstOrDefault(g => g.GameRoomId == gameRoomId);
 
             if (gameRoom != null)
             {
                 status = gameRoom.GiveCardsToPlayer(sessionId);
-                Clients.Group(gameRoom.GameRoomId).PlayerTookCard((gameRoom as GameRoom));
+                Clients.Group(gameRoom.GameRoomId).PlayerTookCard(gameRoom);
             }
             return status;
         }
