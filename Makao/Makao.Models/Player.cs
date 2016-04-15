@@ -9,6 +9,7 @@ namespace Makao.Models
 {
     public class Player
     {
+        public int PlayerID { get; set; }
         public String Name { get; set; }
         public List<Card> Hand { get; set; }
         public string SessionId { get; set; }
@@ -23,5 +24,9 @@ namespace Makao.Models
             IsReady = false;
             IsTurn = false;
         }
+
+        public User User { get; set; }
+
+        public ICollection<ArchiveGame> ArchiveGames { get; set; }
     }
 }
