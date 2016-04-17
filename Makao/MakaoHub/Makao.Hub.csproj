@@ -33,6 +33,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -151,7 +152,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Hubs\BaseHub.cs" />
-    <Compile Include="Hubs\ChatHub.cs" />
     <Compile Include="Hubs\GameRoomHub.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Hubs\MaintenanceHub.cs" />

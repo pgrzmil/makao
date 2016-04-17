@@ -24,6 +24,8 @@ namespace Makao.Models
         public int CurrentPlayerIndex { get; set; }
         public bool IsRunning { get; set; }
 
+        public List<ChatMessage> ChatMessages { get; set; }
+
         public GameRoom()
         {
             Reset();
@@ -177,6 +179,7 @@ namespace Makao.Models
             Deck = null;
             Stack = null;
             GameOver = null;
+            ChatMessages = new List<ChatMessage>();
         }
 
         protected void OnGameOver(Player player)

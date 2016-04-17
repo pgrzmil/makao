@@ -8,7 +8,7 @@ namespace Makao.Models
 {
     public class ChatMessage
     {
-        public Player sender { get; set; }
+        public Player Sender { get; set; }
         public string Message { get; set; }
         public DateTime TimeStamp { get; set; }
     }

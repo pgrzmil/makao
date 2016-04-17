@@ -11,5 +11,10 @@ namespace Makao.Game.Views
             InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Disabled;
         }
+
+        private void sendButton_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            messageBox.Text = "";
+        }
     }
 }

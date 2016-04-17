@@ -29,6 +29,8 @@ namespace Makao.Game.ViewModels
             ConnectOpponentsCommand = new DelegateCommand(ConnectOpponents);
             SetReadyOpponentsCommand = new DelegateCommand(SetReadyOpponents);
             PlayOpponentRoundCommand = new DelegateCommand(PlayOpponentRound);
+
+            SendMessageCommand = new DelegateCommand(SendMessage);
         }
 
         private GameRoom gameRoom;
@@ -206,11 +208,18 @@ namespace Makao.Game.ViewModels
         {
             if (GameRoom.IsRunning && GameRoom.CurrentPlayer() != Player)
             {
-                var opponent = Opponents.FirstOrDefault(o => o.Player.SessionId == GameRoom.CurrentPlayer().SessionId);
-                if (opponent != null)
+                try
                 {
-                    var card = GameRoom.CurrentPlayer().Hand.FirstOrDefault();
-                    var status = await opponent.Proxy.InvokeHubMethod<bool>("PlayCard", opponent.Player.SessionId, GameRoom.GameRoomId, card);
+                    var opponent = Opponents.FirstOrDefault(o => o.Player.SessionId == GameRoom.CurrentPlayer().SessionId);
+                    if (opponent != null)
+                    {
+                        var card = GameRoom.CurrentPlayer().Hand.FirstOrDefault();
+                        var status = await opponent.Proxy.InvokeHubMethod<bool>("PlayCard", opponent.Player.SessionId, GameRoom.GameRoomId, card);
+                    }
+                }
+                catch (InvalidOperationException ex)
+                {
+                    //TODO: obsluzyc w drugiej fazie projektu
                 }
             }
         }
@@ -238,6 +247,7 @@ namespace Makao.Game.ViewModels
             proxy.On<GameRoom>("NotifyGameStart", NotifyGameStart);
             proxy.On<GameRoom>("SetPlayerReadyResponse", SetPlayerReadyResponse);
             proxy.On<GameRoom>("PlayerLeftRoom", PlayerLeftRoom);
+            proxy.On<GameRoom>("IncomingMessage", IncomingMessage);
         }
 
         private async Task RefreshGameRoomData()
@@ -302,6 +312,25 @@ namespace Makao.Game.ViewModels
 
         #endregion Actions
 
+        #region Chat
+        public DelegateCommand SendMessageCommand { get; set; }
+
+        public string ChatMessage { get; set; }
+
+        private async void SendMessage()
+        {
+            try
+            {
+                var message = new ChatMessage() { Message = this.ChatMessage, Sender = this.Player, TimeStamp = DateTime.Now };
+                var status = await proxy.InvokeHubMethod<bool>("SendMessage", GameRoom.GameRoomId, message);
+            }
+            catch (InvalidOperationException)
+            {
+            }
+        }
+
+        #endregion
+
         #region Callbacks
 
         private void PlayerEnteredRoom(GameRoom gameRoom)
@@ -340,6 +369,11 @@ namespace Makao.Game.ViewModels
         }
 
         private void PlayerLeftRoom(GameRoom gameRoom)
+        {
+            GameRoom = gameRoom;
+        }
+
+        private void IncomingMessage(GameRoom gameRoom)
         {
             GameRoom = gameRoom;
         }

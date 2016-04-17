@@ -136,5 +136,19 @@ namespace Makao.Hub
             }
             return status;
         }
+
+        public bool SendMessage(string gameRoomId, ChatMessage message)
+        {
+            var status = false;
+            var gameRoom = SharedData.GameRooms.FirstOrDefault(g => g.GameRoomId == gameRoomId);
+
+            if (gameRoom != null)
+            {
+                gameRoom.ChatMessages.Add(message);
+                Clients.Group(gameRoom.GameRoomId).IncomingMessage(gameRoom);
+                status = true;
+            }
+            return status;
+        }
     }
 }
