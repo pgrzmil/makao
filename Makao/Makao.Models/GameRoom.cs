@@ -8,6 +8,28 @@ namespace Makao.Models
 {
     public delegate void WinnerEventHandler(Player player);
 
+    public enum PlayCardStatus
+    {
+        WrongCard,
+        Success,
+        TakeCards,
+        PassRound,
+        JackRequest,
+        Error
+    }
+
+    public class PlayCardAction
+    {
+        public PlayCardStatus Status { get; set; }
+        public int Count { get; set; }
+        public Card RequestedCard { get; set; }
+
+        public PlayCardAction()
+        {
+            Status = PlayCardStatus.Error;
+        }
+    }
+
     public class GameRoom
     {
         protected Random rand = new Random();
@@ -146,28 +168,33 @@ namespace Makao.Models
             Stack.AddRange(Deck.TakeCards());
         }
 
-        public virtual bool PlayCard(string sessionId, Card card)
+        public virtual PlayCardAction PlayCard(string sessionId, Card playedCard, PlayCardAction previousState = null)
         {
-            var status = false;
+            var status = previousState == null ? new PlayCardAction() : previousState;
             var player = Players.FirstOrDefault(p => p.SessionId == sessionId);
 
             if (player != null)
             {
-                //TODO: Implement rules of putting card on stack
-                var cardFromHand = player.Hand.FirstOrDefault(c => c.CardId == card.CardId);
-                if (cardFromHand != null)
+                var card = player.Hand.FirstOrDefault(c => c.CardId == playedCard.CardId);
+                var topCard = Stack.LastOrDefault();
+                if (card != null)
                 {
-                    if (true)
+                    if (card.Suit == topCard.Suit || card.Rank == topCard.Rank)
                     {
+                        //TODO: Implement rules of putting card on stack
+                        Stack.Add(card);
+                        player.Hand.Remove(card);
+                        CheckIfWinner(player);
+
+                        UpdateCurrentPlayerIndex();
+
+                        status.Status = PlayCardStatus.Success;
                     }
-
-                    Stack.Add(cardFromHand);
-                    player.Hand.Remove(cardFromHand);
-                    CheckIfWinner(player);
-
-                    UpdateCurrentPlayerIndex();
-
-                    status = true;
+                    else
+                    {
+                        status.Status = PlayCardStatus.WrongCard;
+                        return status;
+                    }
                 }
             }
 
@@ -185,13 +212,46 @@ namespace Makao.Models
 
         protected void UpdateCurrentPlayerIndex()
         {
-            CurrentPlayer().IsTurn = false;
+            try
+            {
+                CurrentPlayer().IsTurn = false;
 
-            CurrentPlayerIndex++;
-            if (CurrentPlayerIndex >= Players.Count)
-                CurrentPlayerIndex = 0;
+                CurrentPlayerIndex++;
+                if (CurrentPlayerIndex >= Players.Count)
+                    CurrentPlayerIndex = 0;
 
-            CurrentPlayer().IsTurn = true;
+                CurrentPlayer().IsTurn = true;
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public bool GiveCardToPlayer(string sessionId, int count = 1)
+        {
+            var status = false;
+            var player = Players.FirstOrDefault(p => p.SessionId == sessionId);
+
+            if (player != null)
+            {
+                IEnumerable<Card> cards;
+
+                try
+                {
+                    cards = Deck.TakeCards(count);
+                }
+                catch (NotEnoughCardsException)
+                {
+                    RepopulateDeck();
+                    cards = Deck.TakeCards(count);
+                }
+
+                player.Hand.AddRange(cards);
+                UpdateCurrentPlayerIndex();
+                status = true;
+            }
+
+            return status;
         }
 
         public bool GiveCardsToPlayer(string sessionId, int count = 1)

@@ -18,9 +18,9 @@
     <Page.Resources>
         <converters:CardImageConverter x:Key="cardImageConveter" />
         <DataTemplate x:Key="messageListViewTemplate">
-            <StackPanel VerticalAlignment="Top" Margin="0,0,0,5" >
+            <StackPanel VerticalAlignment="Top" Margin="0,0,0,5">
                 <TextBlock x:Name="nickTextBlock" Foreground="#FFFFF701" Text="{Binding Sender.Name}" FontSize="12" />
-                <TextBlock x:Name="messageTextBlock" Text="{Binding Message}" Foreground="White" TextWrapping="WrapWholeWords"/>
+                <TextBlock x:Name="messageTextBlock" Text="{Binding Message}" Foreground="White" TextWrapping="WrapWholeWords" />
             </StackPanel>
         </DataTemplate>
     </Page.Resources>
@@ -68,12 +68,12 @@
                 <RelativePanel.AlignLeftWithPanel>True</RelativePanel.AlignLeftWithPanel>
 
                 <TextBlock x:Name="statusTextBlock" Margin="5" Text="{Binding StatusText}" />
-                <Button Margin="4,0" Content="Sit to table" Command="{Binding SitToTableCommand}" />
-                <Button Margin="4,0" Content="Ready" Command="{Binding SetReadyCommand}" />
-                <Grid Width="50" />
-                <Button Margin="4,0" Content="Ops. connect" Command="{Binding ConnectOpponentsCommand}" />
-                <Button Margin="4,0" Content="Ops. set ready " Command="{Binding SetReadyOpponentsCommand}" />
-                <Button Margin="4,0" Content="Op. play card" Command="{Binding PlayOpponentRoundCommand}" />
+                <Button Margin="4,0" Content="Sit to table" Command="{Binding SitToTableCommand}" Visibility="{Binding Player, Converter={StaticResource nullToVisibleConverter}}" />
+                <Button Margin="4,0" Content="Ready" Visibility="{Binding Player.IsReady, Converter={StaticResource boolVisibilityNegConverter}}" Command="{Binding SetReadyCommand}" />
+                <StackPanel Margin="50,0,0,0" Orientation="Horizontal" Visibility="{Binding Player, Converter={StaticResource nullToCollapsedConverter}}">
+                    <Button Margin="50,0,0,0" Content="Ops. connect" Command="{Binding ConnectOpponentsCommand}" />
+                    <Button Margin="4,0" Content="Op. play card" Command="{Binding PlayOpponentRoundCommand}" />
+                </StackPanel>
             </StackPanel>
 
             <Grid>
@@ -165,16 +165,16 @@
             </StackPanel>
         </RelativePanel>
         <RelativePanel x:Name="chatPanel" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True"  Width="300" RelativePanel.Below="pageHeader">
-            <ListView RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignRightWithPanel="True" 
-                      RelativePanel.AlignLeftWithPanel="True" RelativePanel.Above="messageBox" 
-                      Background="#662B2B2B" 
-                      ItemTemplate="{StaticResource messageListViewTemplate}" 
-                      ItemsSource="{Binding GameRoom.ChatMessages}" 
+            <ListView RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignRightWithPanel="True"
+                      RelativePanel.AlignLeftWithPanel="True" RelativePanel.Above="messageBox"
+                      Background="#662B2B2B"
+                      ItemTemplate="{StaticResource messageListViewTemplate}"
+                      ItemsSource="{Binding GameRoom.ChatMessages}"
                       IsItemClickEnabled="False"
                       IsTapEnabled="False" IsRightTapEnabled="False" IsDoubleTapEnabled="False" IsHoldingEnabled="False" />
-            <TextBox x:Name="messageBox" RelativePanel.AlignBottomWithPanel="True" RelativePanel.LeftOf="sendButton" RelativePanel.AlignLeftWithPanel="True" Text="{Binding ChatMessage, Mode=TwoWay}"/>
+            <TextBox x:Name="messageBox" RelativePanel.AlignBottomWithPanel="True" RelativePanel.LeftOf="sendButton" RelativePanel.AlignLeftWithPanel="True" Text="{Binding ChatMessage, Mode=TwoWay}" />
             <Button x:Name="sendButton" Margin="-0.2,-0.2,0,0" Command="{Binding SendMessageCommand}" Background="DarkGreen" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignRightWithPanel="True" Tapped="sendButton_Tapped">
-                <SymbolIcon Symbol="Send"/>
+                <SymbolIcon Symbol="Send" />
             </Button>
         </RelativePanel>
     </RelativePanel>
