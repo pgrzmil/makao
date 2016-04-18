@@ -16,6 +16,7 @@ namespace Makao.Models
         public string ConnectionId { get; set; }
         public bool IsReady { get; set; }
         public bool IsTurn { get; set; }
+        public int RoundsToWait { get; set; }
 
         public Player(string name)
         {
