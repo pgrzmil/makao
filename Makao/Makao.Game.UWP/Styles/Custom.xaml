@@ -12,6 +12,8 @@
 
     <converters:BooleanToVisibilityConverter x:Key="boolVisibilityConverter" />
     <converters:BooleanToVisibilityNegationConverter x:Key="boolVisibilityNegConverter" />
+    <converters:NullToCollapsedConverter x:Key="nullToCollapsedConverter" />
+    <converters:NullToVisibleConverter x:Key="nullToVisibleConverter" />
 
     <ResourceDictionary.ThemeDictionaries>
 

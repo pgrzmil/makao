@@ -100,11 +100,27 @@ namespace Makao.Hub
             }
         }
 
-        public bool PlayCard(string sessionId, string gameRoomId, Card card)
+        public PlayCardAction PlayCard(string sessionId, string gameRoomId, Card card)
         {
-            var status = false;
+            var status = new PlayCardAction();
             var gameRoom = SharedData.GameRooms.FirstOrDefault(g => g.GameRoomId == gameRoomId);
 
+            AddHandlers(gameRoom);
+
+            if (gameRoom != null)
+            {
+                status = gameRoom.PlayCard(sessionId, card);
+                if (status.Status == PlayCardStatus.Success)
+                {
+                    Clients.Group(gameRoom.GameRoomId).PlayerPlayedCard(gameRoom);
+                }
+            }
+
+            return status;
+        }
+
+        private void AddHandlers(GameRoom gameRoom)
+        {
             if (!gameRoom.HasGameOverListeners())
             {
                 gameRoom.GameOver += (winner) =>
@@ -113,15 +129,6 @@ namespace Makao.Hub
                     gameRoom.Reset();
                 };
             }
-
-            if (gameRoom != null)
-            {
-                status = gameRoom.PlayCard(sessionId, card);
-
-                Clients.Group(gameRoom.GameRoomId).PlayerPlayedCard(gameRoom);
-            }
-
-            return status;
         }
 
         public bool TakeCard(string sessionId, string gameRoomId)
@@ -131,7 +138,21 @@ namespace Makao.Hub
 
             if (gameRoom != null)
             {
-                status = gameRoom.GiveCardsToPlayer(sessionId);
+                status = gameRoom.GiveCardToPlayer(sessionId);
+
+                Clients.Group(gameRoom.GameRoomId).PlayerTookCard(gameRoom);
+            }
+            return status;
+        }
+
+        public bool TakeCards(string sessionId, string gameRoomId, int count)
+        {
+            var status = false;
+            var gameRoom = SharedData.GameRooms.FirstOrDefault(g => g.GameRoomId == gameRoomId);
+
+            if (gameRoom != null)
+            {
+                status = gameRoom.GiveCardsToPlayer(sessionId, count);
                 Clients.Group(gameRoom.GameRoomId).PlayerTookCard(gameRoom);
             }
             return status;
