@@ -30,50 +30,56 @@ namespace Makao.Models
 
         public List<ChatMessage> ChatMessages { get; set; }
 
-        public List<Card> AllowedCards
+        public List<Card> AllowedCards()
         {
-            get
+            var cards = new List<Card>();
+            if (Stack == null)
             {
-                var cards = new List<Card>();
-                var currentCard = Stack.Last();
-                switch (currentCard.Rank)
-                {
-                    case CardRanks.Four:
-                        cards.AddRange(Card.GetAllCardsOfRank(CardRanks.Four));
-                        return cards;
-                    case CardRanks.Three:
-                    case CardRanks.Two:
-                        cards.AddRange(Card.GetAllCardsOfRank(CardRanks.Two));
-                        cards.AddRange(Card.GetAllCardsOfRank(CardRanks.Three));
-                        return cards;
-                    case CardRanks.Ace:
-                        cards.AddRange(Card.GetAllCardsOfRank(CardRanks.Ace));
-                        cards.AddRange(Card.GetAllCardOfSuit(this.RequestedSuit));
-                        return cards;
-                    case CardRanks.King: //to be improved - active / inactive state should be taken into account
-                        if (currentCard.Suit == CardSuits.Spades || currentCard.Suit == CardSuits.Hearts)
-                        {
-                            cards.AddRange(Card.GetAllCardsOfRank(CardRanks.King));
-                        }
-                        else
-                        {
-                            cards.AddRange(Card.GetAllCardsOfRank(CardRanks.King));
-                            cards.AddRange(Card.GetAllCardOfSuit(currentCard.Suit));
-                        }
-                        break;
-                    case CardRanks.Jack:
-                        cards.AddRange(Card.GetAllCardsOfRank(CardRanks.Jack));
-                        cards.AddRange(Card.GetAllCardsOfRank(this.RequestedRank));
-                        return cards;
-                    case CardRanks.Queen: //assumption: we don't play as Q for all, all for Q
-                    default:
-                        cards.AddRange(Card.GetAllCardsOfRank(currentCard.Rank));
-                        cards.AddRange(Card.GetAllCardOfSuit(currentCard.Suit));
-                        return cards;
-                }
-                
-                return cards;
+                return null;
             }
+            var currentCard = Stack.Last();
+            switch (currentCard.Rank)
+            {
+                case CardRanks.Four:
+                    cards.AddRange(Card.GetAllCardsOfRank(CardRanks.Four));
+                    return cards;
+
+                case CardRanks.Three:
+                case CardRanks.Two:
+                    cards.AddRange(Card.GetAllCardsOfRank(CardRanks.Two));
+                    cards.AddRange(Card.GetAllCardsOfRank(CardRanks.Three));
+                    return cards;
+
+                case CardRanks.Ace:
+                    cards.AddRange(Card.GetAllCardsOfRank(CardRanks.Ace));
+                    cards.AddRange(Card.GetAllCardOfSuit(this.RequestedSuit));
+                    return cards;
+
+                case CardRanks.King: //to be improved - active / inactive state should be taken into account
+                    if (currentCard.Suit == CardSuits.Spades || currentCard.Suit == CardSuits.Hearts)
+                    {
+                        cards.AddRange(Card.GetAllCardsOfRank(CardRanks.King));
+                    }
+                    else
+                    {
+                        cards.AddRange(Card.GetAllCardsOfRank(CardRanks.King));
+                        cards.AddRange(Card.GetAllCardOfSuit(currentCard.Suit));
+                    }
+                    break;
+
+                case CardRanks.Jack:
+                    cards.AddRange(Card.GetAllCardsOfRank(CardRanks.Jack));
+                    cards.AddRange(Card.GetAllCardsOfRank(this.RequestedRank));
+                    return cards;
+
+                case CardRanks.Queen: //assumption: we don't play as Q for all, all for Q
+                default:
+                    cards.AddRange(Card.GetAllCardsOfRank(currentCard.Rank));
+                    cards.AddRange(Card.GetAllCardOfSuit(currentCard.Suit));
+                    return cards;
+            }
+
+            return cards;
         }
 
         public GameRoom()
@@ -153,7 +159,6 @@ namespace Makao.Models
                 {
                     if (true)
                     {
-
                     }
 
                     Stack.Add(cardFromHand);
