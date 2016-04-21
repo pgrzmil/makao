@@ -18,6 +18,11 @@ namespace Makao.Models
             CardId = string.Format("{0}_of_{1}", rank, suit);
         }
 
+        public override string ToString()
+        {
+            return CardId;
+        }
+
         public List<Card> GetAllCardsOfSuit()
         {
             var ranks = Enum.GetValues(typeof(CardRanks)).Cast<CardRanks>();

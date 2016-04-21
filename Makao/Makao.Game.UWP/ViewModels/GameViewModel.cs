@@ -331,9 +331,34 @@ namespace Makao.Game.ViewModels
             try
             {
                 var status = await proxy.InvokeHubMethod<PlayCardAction>("PlayCard", Player.SessionId, GameRoom.GameRoomId, card);
-                if (status.Status == PlayCardStatus.WrongCard)
+                switch (status.Status)
                 {
-                    StatusText = "Wrong card";
+                    case PlayCardStatus.WrongCard:
+                        StatusText = "Wrong card";
+                        break;
+                    case PlayCardStatus.TakeCards:
+                        StatusText = "Player took card";
+                        break;
+                    case PlayCardStatus.PassRound:
+                        StatusText = "Player passed round";
+                        break;
+                    case PlayCardStatus.ChooseRank:
+                        StatusText = "Please choose rank";
+                        break;
+                    case PlayCardStatus.ChooseSuit:
+                        StatusText = "Please choose suit";
+                        break;
+                    case PlayCardStatus.Error:
+                        StatusText = "Something went wrong. Don't panic!";
+                        break;
+                    case PlayCardStatus.RoundsToWaitInc:
+                        StatusText = String.Format("{0} {1}", "To wait:", GameRoom.RoundsToWait);
+                        break;
+                    case PlayCardStatus.CardsToTakeInc:
+                        StatusText = String.Format("{0} {1}", "To take:", GameRoom.CardsToTake);
+                        break;
+                    default:
+                        break;
                 }
             }
             catch (InvalidOperationException)

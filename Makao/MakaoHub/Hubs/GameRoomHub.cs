@@ -110,7 +110,7 @@ namespace Makao.Hub
             if (gameRoom != null)
             {
                 status = gameRoom.PlayCard(sessionId, card);
-                if (status.Status == PlayCardStatus.Success)
+                if (status.Status != PlayCardStatus.Error)
                 {
                     Clients.Group(gameRoom.GameRoomId).PlayerPlayedCard(gameRoom);
                 }

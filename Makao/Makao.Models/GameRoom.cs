@@ -14,8 +14,11 @@ namespace Makao.Models
         Success,
         TakeCards,
         PassRound,
-        JackRequest,
-        Error
+        ChooseRank,
+        ChooseSuit,
+        Error,
+        RoundsToWaitInc,
+        CardsToTakeInc
     }
 
     public class PlayCardAction
@@ -47,10 +50,13 @@ namespace Makao.Models
         public bool IsRunning { get; set; }
         public int CardsToTake { get; set; }
         public int RoundsToWait { get; set; }
-        public CardSuits RequestedSuit { get; set; }
-        public CardRanks RequestedRank { get; set; }
+        public CardSuits? RequestedSuit { get; set; }
+        public CardRanks? RequestedRank { get; set; }
 
         public List<ChatMessage> ChatMessages { get; set; }
+        public bool PlayersNextMove { get; private set; }
+
+        //public List<Card> AllowedCards { get; set; }
 
         public List<Card> AllowedCards()
         {
@@ -60,45 +66,60 @@ namespace Makao.Models
                 return null;
             }
             var currentCard = Stack.Last();
-            switch (currentCard.Rank)
+            if (!PlayersNextMove)
             {
-                case CardRanks.Four:
-                    cards.AddRange(Card.GetAllCardsOfRank(CardRanks.Four));
-                    return cards;
+                switch (currentCard.Rank)
+                {
+                    case CardRanks.Four:
+                        cards.AddRange(Card.GetAllCardsOfRank(CardRanks.Four));
+                        return cards;
 
-                case CardRanks.Three:
-                case CardRanks.Two:
-                    cards.AddRange(Card.GetAllCardsOfRank(CardRanks.Two));
-                    cards.AddRange(Card.GetAllCardsOfRank(CardRanks.Three));
-                    return cards;
+                    case CardRanks.Three:
+                    case CardRanks.Two:
+                        cards.AddRange(Card.GetAllCardsOfRank(CardRanks.Two));
+                        cards.AddRange(Card.GetAllCardsOfRank(CardRanks.Three));
+                        return cards;
 
-                case CardRanks.Ace:
-                    cards.AddRange(Card.GetAllCardsOfRank(CardRanks.Ace));
-                    cards.AddRange(Card.GetAllCardOfSuit(this.RequestedSuit));
-                    return cards;
+                    case CardRanks.Ace:
+                        cards.AddRange(Card.GetAllCardsOfRank(CardRanks.Ace));
+                        if (this.RequestedSuit != null)
+                            cards.AddRange(Card.GetAllCardOfSuit(this.RequestedSuit.Value));
+                        else
+                            cards.AddRange(Card.GetAllCardOfSuit(currentCard.Suit));
 
-                case CardRanks.King: //to be improved - active / inactive state should be taken into account
-                    if (currentCard.Suit == CardSuits.Spades || currentCard.Suit == CardSuits.Hearts)
-                    {
-                        cards.AddRange(Card.GetAllCardsOfRank(CardRanks.King));
-                    }
-                    else
-                    {
-                        cards.AddRange(Card.GetAllCardsOfRank(CardRanks.King));
+                        return cards;
+
+                    case CardRanks.King: //to be improved - active / inactive state should be taken into account
+                        if (currentCard.Suit == CardSuits.Spades || currentCard.Suit == CardSuits.Hearts)
+                        {
+                            cards.AddRange(Card.GetAllCardsOfRank(CardRanks.King));
+                        }
+                        else
+                        {
+                            cards.AddRange(Card.GetAllCardsOfRank(CardRanks.King));
+                            cards.AddRange(Card.GetAllCardOfSuit(currentCard.Suit));
+                        }
+                        return cards;
+
+                    case CardRanks.Jack:
+                        cards.AddRange(Card.GetAllCardsOfRank(CardRanks.Jack));
+                        if (this.RequestedRank != null)
+                            cards.AddRange(Card.GetAllCardsOfRank(this.RequestedRank.Value));
+                        else
+                            cards.AddRange(Card.GetAllCardOfSuit(currentCard.Suit));
+
+                        return cards;
+
+                    case CardRanks.Queen: //assumption: we don't play as Q for all, all for Q
+                    default:
+                        cards.AddRange(Card.GetAllCardsOfRank(currentCard.Rank));
                         cards.AddRange(Card.GetAllCardOfSuit(currentCard.Suit));
-                    }
-                    break;
-
-                case CardRanks.Jack:
-                    cards.AddRange(Card.GetAllCardsOfRank(CardRanks.Jack));
-                    cards.AddRange(Card.GetAllCardsOfRank(this.RequestedRank));
-                    return cards;
-
-                case CardRanks.Queen: //assumption: we don't play as Q for all, all for Q
-                default:
-                    cards.AddRange(Card.GetAllCardsOfRank(currentCard.Rank));
-                    cards.AddRange(Card.GetAllCardOfSuit(currentCard.Suit));
-                    return cards;
+                        return cards;
+                } 
+            }
+            else
+            {
+                cards.AddRange(Card.GetAllCardsOfRank(currentCard.Rank));
             }
 
             return cards;
@@ -179,16 +200,63 @@ namespace Makao.Models
                 var topCard = Stack.LastOrDefault();
                 if (card != null)
                 {
-                    if (card.Suit == topCard.Suit || card.Rank == topCard.Rank)
+                    if (AllowedCards().FirstOrDefault(c => c.CardId == card.CardId) != null)
                     {
                         //TODO: Implement rules of putting card on stack
                         Stack.Add(card);
                         player.Hand.Remove(card);
+
                         CheckIfWinner(player);
 
-                        UpdateCurrentPlayerIndex();
+                        switch (card.Rank)
+                        {
+                            case CardRanks.Ace:
+                                status.Status = PlayCardStatus.ChooseSuit;
+                                break;
+                            case CardRanks.King:
+                                if (card.Suit == CardSuits.Spades || card.Suit == CardSuits.Hearts)
+                                {
+                                    CardsToTake += 5;
+                                    status.Status = PlayCardStatus.CardsToTakeInc;
+                                }
+                                else
+                                {
+                                    status.Status = PlayCardStatus.Success;
+                                }
+                                break;
+                            case CardRanks.Jack:
+                                status.Status = PlayCardStatus.ChooseRank;
+                                break;
+                            case CardRanks.Four:
+                                RoundsToWait += 1;
+                                status.Status = PlayCardStatus.RoundsToWaitInc;
+                                break;
+                            case CardRanks.Three:
+                                CardsToTake += 3;
+                                status.Status = PlayCardStatus.CardsToTakeInc;
+                                break;
+                            case CardRanks.Two:
+                                CardsToTake += 2;
+                                status.Status = PlayCardStatus.CardsToTakeInc;
+                                break;
+                            default:
+                                status.Status = PlayCardStatus.Success;
+                                break;
+                        }
 
-                        status.Status = PlayCardStatus.Success;
+                        var cardsAllowedWithCurrent = new List<Card>();
+                        cardsAllowedWithCurrent.AddRange(card.GetAllCardsOfRank());                 
+
+                        //if player has more allowed cards
+                        if (!cardsAllowedWithCurrent.Select(ac => ac.CardId).Intersect(player.Hand.Select(c => c.CardId)).Any())
+                        {
+                            PlayersNextMove = false;
+                            UpdateCurrentPlayerIndex();
+                        }
+                        else
+                        {
+                            PlayersNextMove = true;
+                        }
                     }
                     else
                     {
@@ -238,6 +306,11 @@ namespace Makao.Models
 
                 try
                 {
+                    if (CardsToTake > 0)
+                    {
+                        count = CardsToTake;
+                        CardsToTake = 0;
+                    }
                     cards = Deck.TakeCards(count);
                 }
                 catch (NotEnoughCardsException)
