@@ -11,7 +11,7 @@ namespace Makao.Tests.ModelsTests
     {
         internal void UpdateCurrentPlayerIndexMock()
         {
-            UpdateCurrentPlayerIndex();
+            UpdateCurrentPlayerIndex(this.AllowedCards());
         }
 
         internal void CheckIfWinnerMock(Player player)
