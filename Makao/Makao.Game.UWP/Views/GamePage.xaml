@@ -212,10 +212,10 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Button Grid.Column="0" Grid.Row="0" x:Name="spadesBtn" Content="♠" Command="{Binding PlayerChosenSuitCommand}" CommandParameter="spades" Style="{StaticResource chooseBtnStyle}"/>
-                <Button Grid.Column="1" Grid.Row="0" x:Name="heartsBtn" Content="♥" Command="{Binding PlayerChosenSuitCommand}" CommandParameter="hearts" Style="{StaticResource chooseBtnStyle}"/>
-                <Button Grid.Column="0" Grid.Row="1" x:Name="diamondsBtn" Content="♦" Command="{Binding PlayerChosenSuitCommand}" CommandParameter="diamonds" Style="{StaticResource chooseBtnStyle}"/>
-                <Button Grid.Column="1" Grid.Row="1" x:Name="clubsBtn" Content="♣" Command="{Binding PlayerChosenSuitCommand}" CommandParameter="clubs" Style="{StaticResource chooseBtnStyle}"/>
+                <Button Grid.Column="0" Grid.Row="0" x:Name="spadesBtn" Content="♠" Command="{Binding PlayerChosenSuitCommand}" CommandParameter="Spades" Style="{StaticResource chooseBtnStyle}"/>
+                <Button Grid.Column="1" Grid.Row="0" x:Name="heartsBtn" Content="♥" Command="{Binding PlayerChosenSuitCommand}" CommandParameter="Hearts" Style="{StaticResource chooseBtnStyle}"/>
+                <Button Grid.Column="0" Grid.Row="1" x:Name="diamondsBtn" Content="♦" Command="{Binding PlayerChosenSuitCommand}" CommandParameter="Diamonds" Style="{StaticResource chooseBtnStyle}"/>
+                <Button Grid.Column="1" Grid.Row="1" x:Name="clubsBtn" Content="♣" Command="{Binding PlayerChosenSuitCommand}" CommandParameter="Clubs" Style="{StaticResource chooseBtnStyle}"/>
             </Grid>
         </StackPanel>
         <StackPanel Visibility="{Binding ShowRankChoosePanel, Converter={StaticResource boolVisibilityConverter}}" Background="#E5000000" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" Padding="50">
