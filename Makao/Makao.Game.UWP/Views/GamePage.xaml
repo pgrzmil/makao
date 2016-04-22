@@ -1,4 +1,4 @@
-<Page x:Class="Makao.Game.Views.GamePage"
+﻿<Page x:Class="Makao.Game.Views.GamePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:Behaviors="using:Template10.Behaviors"
@@ -23,6 +23,15 @@
                 <TextBlock x:Name="messageTextBlock" Text="{Binding Message}" Foreground="White" TextWrapping="WrapWholeWords" />
             </StackPanel>
         </DataTemplate>
+        <Style x:Name="chooseBtnStyle" x:Key="chooseBtnStyle" TargetType="Button">
+            <Setter Property="FontSize" Value="48"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Padding" Value="15"/>
+            <Setter Property="Width" Value="90"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Background" Value="#FF0A930A"/>
+            
+        </Style>
     </Page.Resources>
 
     <RelativePanel Background="DarkGreen">
@@ -63,7 +72,7 @@
         <RelativePanel x:Name="mainGamePanel" RelativePanel.AlignLeftWithPanel="True" RelativePanel.LeftOf="chatPanel">
             <RelativePanel.Below>pageHeader</RelativePanel.Below>
             <RelativePanel.AlignBottomWithPanel>True</RelativePanel.AlignBottomWithPanel>
-            <StackPanel Orientation="Horizontal" x:Name="statusGrid">
+            <StackPanel Orientation="Horizontal" x:Name="statusGrid" Margin="0,0,0,-0.2">
                 <RelativePanel.AlignRightWithPanel>True</RelativePanel.AlignRightWithPanel>
                 <RelativePanel.AlignLeftWithPanel>True</RelativePanel.AlignLeftWithPanel>
 
@@ -73,6 +82,20 @@
                 <StackPanel Margin="50,0,0,0" Orientation="Horizontal" Visibility="{Binding Player, Converter={StaticResource nullToCollapsedConverter}}">
                     <Button Margin="50,0,0,0" Content="Ops. connect" Command="{Binding ConnectOpponentsCommand}" />
                     <Button Margin="4,0" Content="Op. play card" Command="{Binding PlayOpponentRoundCommand}" />
+                </StackPanel>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Visibility="Collapsed">
+                    <TextBlock>
+                        <Run Text="To take:" />
+                        <Run Text="{Binding GameRoom.CardsToTake}" />
+                    </TextBlock>
+                    <TextBlock>
+                        <Run Text="To wait:" />
+                        <Run Text="{Binding GameRoom.RoundsToWait}" />
+                    </TextBlock>
+                    <TextBlock>
+                        <Run Text="Atu active:" />
+                        <Run Text="{Binding GameRoom.AtuActive}" />
+                    </TextBlock>
                 </StackPanel>
             </StackPanel>
 
@@ -177,5 +200,43 @@
                 <SymbolIcon Symbol="Send" />
             </Button>
         </RelativePanel>
+
+        <StackPanel Visibility="{Binding ShowSuitChoosePanel, Converter={StaticResource boolVisibilityConverter}}" Background="#E5000000" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" Padding="50">
+            <TextBlock Text="Please choose a suit:" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlockStyle}" Margin="0,0,0,20" Foreground="White" />
+            <Grid x:Name="suitChoosePanel" HorizontalAlignment="Center" Padding="0" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Button Grid.Column="0" Grid.Row="0" x:Name="spadesBtn" Content="♠" Command="{Binding PlayerChosenSuitCommand}" CommandParameter="spades" Style="{StaticResource chooseBtnStyle}"/>
+                <Button Grid.Column="1" Grid.Row="0" x:Name="heartsBtn" Content="♥" Command="{Binding PlayerChosenSuitCommand}" CommandParameter="hearts" Style="{StaticResource chooseBtnStyle}"/>
+                <Button Grid.Column="0" Grid.Row="1" x:Name="diamondsBtn" Content="♦" Command="{Binding PlayerChosenSuitCommand}" CommandParameter="diamonds" Style="{StaticResource chooseBtnStyle}"/>
+                <Button Grid.Column="1" Grid.Row="1" x:Name="clubsBtn" Content="♣" Command="{Binding PlayerChosenSuitCommand}" CommandParameter="clubs" Style="{StaticResource chooseBtnStyle}"/>
+            </Grid>
+        </StackPanel>
+        <StackPanel Visibility="{Binding ShowRankChoosePanel, Converter={StaticResource boolVisibilityConverter}}" Background="#E5000000" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" Padding="50">
+            <TextBlock Text="Please choose a rank:" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlockStyle}" Margin="0,0,0,20" Foreground="White" />
+            <Grid x:Name="rankChoosePanel" HorizontalAlignment="Center" Padding="0" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Button Grid.Column="0" Grid.Row="0" CommandParameter="Five" Command="{Binding PlayerChosenRankCommand}" Content="5" Style="{StaticResource chooseBtnStyle}"/>
+                <Button Grid.Column="1" Grid.Row="0" CommandParameter="Six" Command="{Binding PlayerChosenRankCommand}" Content="6" Style="{StaticResource chooseBtnStyle}"/>
+                <Button Grid.Column="2" Grid.Row="0" CommandParameter="Seven" Command="{Binding PlayerChosenRankCommand}" Content="7" Style="{StaticResource chooseBtnStyle}"/>
+                <Button Grid.Column="0" Grid.Row="1" CommandParameter="Eight" Command="{Binding PlayerChosenRankCommand}" Content="8" Style="{StaticResource chooseBtnStyle}"/>
+                <Button Grid.Column="1" Grid.Row="1" CommandParameter="Nine" Command="{Binding PlayerChosenRankCommand}" Content="9" Style="{StaticResource chooseBtnStyle}"/>
+                <Button Grid.Column="2" Grid.Row="1" CommandParameter="Ten" Command="{Binding PlayerChosenRankCommand}" Content="10" Style="{StaticResource chooseBtnStyle}"/>
+            </Grid>
+        </StackPanel>
     </RelativePanel>
 </Page>

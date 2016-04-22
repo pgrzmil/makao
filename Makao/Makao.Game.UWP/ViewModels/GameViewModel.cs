@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Template10.Common;
 using Template10.Mvvm;
 using Template10.Services.NavigationService;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
 namespace Makao.Game.ViewModels
@@ -19,18 +20,73 @@ namespace Makao.Game.ViewModels
     {
         private HubProxyService proxy;
 
+        private bool showSuitChoosePanel;
+        public bool ShowSuitChoosePanel
+        {
+            get { return showSuitChoosePanel; }
+            set
+            {
+                showSuitChoosePanel = value;
+                RaisePropertyChanged("ShowSuitChoosePanel");
+            }
+        }
+
+        private bool showRankChoosePanel;
+        public bool ShowRankChoosePanel
+        {
+            get { return showRankChoosePanel; }
+            set
+            {
+                showRankChoosePanel = value;
+                RaisePropertyChanged("ShowRankChoosePanel");
+            }
+        }
+
         public GameViewModel() : base()
         {
             SetReadyCommand = new DelegateCommand(SetReady);
             SitToTableCommand = new DelegateCommand(SitToTable);
             TakeCardCommand = new DelegateCommand(TakeCard);
             PlayCardCommand = new DelegateCommand<Card>(PlayCard);
+            PlayerChosenRankCommand = new DelegateCommand<string>(RankChosen);
+            PlayerChosenSuitCommand = new DelegateCommand<string>(SuitChosen);
 
             ConnectOpponentsCommand = new DelegateCommand(ConnectOpponents);
             //  SetReadyOpponentsCommand = new DelegateCommand(SetReadyOpponents);
             PlayOpponentRoundCommand = new DelegateCommand(PlayOpponentRound);
 
             SendMessageCommand = new DelegateCommand(SendMessage);
+
+            ShowRankChoosePanel = false;
+            ShowSuitChoosePanel = false;
+        }
+
+        private async void SuitChosen(string suit)
+        {
+            try
+            {
+                ShowSuitChoosePanel = false;
+                CardSuits cardSuit = (CardSuits)Enum.Parse(typeof(CardSuits), suit);
+                var status = await proxy.InvokeHubMethod<bool>("RequestSuit", Player.SessionId, GameRoom.GameRoomId, cardSuit);
+                StatusText = String.Format("Chosen suit: " + suit);
+            }
+            catch (InvalidOperationException)
+            {
+            }
+        }
+
+        private async void RankChosen(string rank)
+        {
+            try
+            {
+                ShowRankChoosePanel = false;
+                CardRanks cardRank = (CardRanks)Enum.Parse(typeof(CardRanks), rank);
+                var status = await proxy.InvokeHubMethod<bool>("RequestRank", Player.SessionId, GameRoom.GameRoomId, cardRank);
+                StatusText = String.Format("Chosen rank: " + rank);
+            }
+            catch (InvalidOperationException)
+            {
+            }
         }
 
         private GameRoom gameRoom;
@@ -210,7 +266,7 @@ namespace Makao.Game.ViewModels
             }
         }
 
-        private async void PlayOpponentRound()
+        private void PlayOpponentRound()
         {
             if (GameRoom.IsRunning && GameRoom.CurrentPlayer() != Player)
             {
@@ -220,11 +276,16 @@ namespace Makao.Game.ViewModels
                     if (opponent != null)
                     {
                         var topCard = GameRoom.Stack.LastOrDefault();
-                        var card = GameRoom.CurrentPlayer().Hand.FirstOrDefault(c => c.Rank == topCard.Rank || c.Suit == topCard.Suit);
-                        if (card != null)
+                        var opponentAllowedCards = GameRoom.AllowedCards().Select(ac => ac.CardId).Intersect(GameRoom.CurrentPlayer().Hand.Select(c => c.CardId)).ToList();
+
+                        if (opponentAllowedCards.Count > 0)
                         {
-                            var status = await opponent.Proxy.InvokeHubMethod<PlayCardAction>("PlayCard", opponent.Player.SessionId, GameRoom.GameRoomId, card);
-                            if (status.Status == PlayCardStatus.WrongCard)
+                            var card = GameRoom.CurrentPlayer().Hand.FirstOrDefault(c => c.CardId == opponentAllowedCards.First());
+                            if (card != null)
+                            {
+                                PlayCard(card, opponent.Player.SessionId);
+                            }
+                            else
                             {
                                 OpponentTakeCard(opponent);
                             }
@@ -279,6 +340,8 @@ namespace Makao.Game.ViewModels
             proxy.On<GameRoom>("SetPlayerReadyResponse", SetPlayerReadyResponse);
             proxy.On<GameRoom>("PlayerLeftRoom", PlayerLeftRoom);
             proxy.On<GameRoom>("IncomingMessage", IncomingMessage);
+            proxy.On<GameRoom>("PlayerRequestedRank", PlayerRequestedRank);
+            proxy.On<GameRoom>("PlayerRequestedSuit", PlayerRequestedSuit);
         }
 
         private async Task RefreshGameRoomData()
@@ -292,6 +355,8 @@ namespace Makao.Game.ViewModels
         public DelegateCommand SitToTableCommand { get; set; }
         public DelegateCommand TakeCardCommand { get; set; }
         public DelegateCommand<Card> PlayCardCommand { get; set; }
+        public DelegateCommand<string> PlayerChosenRankCommand { get; set; }
+        public DelegateCommand<string> PlayerChosenSuitCommand { get; set; }
 
         private async void SitToTable()
         {
@@ -315,22 +380,33 @@ namespace Makao.Game.ViewModels
             }
         }
 
-        private async void TakeCard()
+        private void TakeCard()
+        {
+            TakeCard(Player.SessionId);
+        }
+        private async void TakeCard(string sessionId)
         {
             try
             {
-                var status = await proxy.InvokeHubMethod<bool>("TakeCard", Player.SessionId, GameRoom.GameRoomId);
+                var status = await proxy.InvokeHubMethod<bool>("TakeCard", sessionId, GameRoom.GameRoomId);
             }
             catch (InvalidOperationException)
             {
             }
         }
 
-        private async void PlayCard(Card card)
+        private void PlayCard(Card card)
+        {
+            PlayCard(card, Player.SessionId);
+        }
+
+        private async void PlayCard(Card card, string sessionId)
         {
             try
             {
-                var status = await proxy.InvokeHubMethod<PlayCardAction>("PlayCard", Player.SessionId, GameRoom.GameRoomId, card);
+                StatusText = "";
+                var status = await proxy.InvokeHubMethod<PlayCardAction>("PlayCard", sessionId, GameRoom.GameRoomId, card);
+
                 switch (status.Status)
                 {
                     case PlayCardStatus.WrongCard:
@@ -343,19 +419,17 @@ namespace Makao.Game.ViewModels
                         StatusText = "Player passed round";
                         break;
                     case PlayCardStatus.ChooseRank:
-                        StatusText = "Please choose rank";
+                        ShowRankChoosePanel = true;
                         break;
                     case PlayCardStatus.ChooseSuit:
-                        StatusText = "Please choose suit";
+                        ShowSuitChoosePanel = true;
+                        break;
+                    case PlayCardStatus.NoCardsToPlay:
+                        StatusText = "No cards to play.";
+                        TakeCard(sessionId);
                         break;
                     case PlayCardStatus.Error:
                         StatusText = "Something went wrong. Don't panic!";
-                        break;
-                    case PlayCardStatus.RoundsToWaitInc:
-                        StatusText = String.Format("{0} {1}", "To wait:", GameRoom.RoundsToWait);
-                        break;
-                    case PlayCardStatus.CardsToTakeInc:
-                        StatusText = String.Format("{0} {1}", "To take:", GameRoom.CardsToTake);
                         break;
                     default:
                         break;
@@ -431,6 +505,16 @@ namespace Makao.Game.ViewModels
         }
 
         private void IncomingMessage(GameRoom gameRoom)
+        {
+            GameRoom = gameRoom;
+        }
+
+        private void PlayerRequestedRank(GameRoom gameRoom)
+        {
+            GameRoom = gameRoom;
+        }
+
+        private void PlayerRequestedSuit(GameRoom gameRoom)
         {
             GameRoom = gameRoom;
         }
